@@ -7,6 +7,9 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"
@@ -36,6 +39,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".alarm.ui.AddEditAlarmActivity"></activity>
+        <activity android:name=".alarm.ui.AlarmActivity"></activity>
+        <activity android:name=".alarm.ui.AlarmLandingPageActivity"></activity>
+        <service android:name=".alarm.service.LoadAlarmsService"/>
+        <receiver android:name=".alarm.service.AlarmReceiver"/>
+        <receiver android:name=".alarm.service.LoadAlarmsReceiver"/>
     </application>
 
 </manifest>

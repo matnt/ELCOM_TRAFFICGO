@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight="2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            app:srcCompat="@mipmap/ic_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/item_distance"
+            android:gravity="center"
+            android:textColor="#636161"
+            android:text="4,5 km"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout_item"
+        android:orientation="vertical"
+        android:layout_weight="6"
+        android:layout_width="0dp"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/item_name_place"
+            android:gravity="left"
+            android:textColor="#AA2557"
+            android:textStyle="bold"
+            android:text="Elcom place"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/item_d_place"
+            android:gravity="left"
+            android:textColor="#636161"
+            android:text="Elcom on 15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <ImageButton
+        android:id="@+id/ibtn_select"
+        app:srcCompat="@mipmap/ic_select_search"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:background="@android:color/transparent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
