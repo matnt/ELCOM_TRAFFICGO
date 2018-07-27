@@ -18,7 +18,7 @@
             android:id="@+id/item_distance"
             android:gravity="center"
             android:textColor="#636161"
-            android:text="4,5 km"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

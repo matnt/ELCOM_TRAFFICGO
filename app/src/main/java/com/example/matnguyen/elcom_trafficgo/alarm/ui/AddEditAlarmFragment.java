@@ -2,7 +2,6 @@ package com.example.matnguyen.elcom_trafficgo.alarm.ui;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -48,7 +47,7 @@ public final class AddEditAlarmFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        final View v = inflater.inflate(R.layout.fragment_add_edit_alarm, container, false);
+        final View v = inflater.inflate(R.layout.alarm_fragment_add_edit, container, false);
 
         setHasOptionsMenu(true);
 

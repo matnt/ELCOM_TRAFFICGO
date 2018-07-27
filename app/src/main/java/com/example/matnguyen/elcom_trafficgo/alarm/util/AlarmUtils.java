@@ -153,8 +153,11 @@ public final class AlarmUtils {
     }
 
     public static int getNotificationId(Alarm alarm) {
-        final long id = alarm.getId();
-        return (int) (id^(id>>>32));
+        long id = alarm.getId();
+        //int idx = (int) (id ^ (id >>> 32));
+        //>>>: Toán tử dịch phải và điền 0 vào chỗ trống
+        // dịch đi 32 bit và điền 0 vào các chỗ trống đằng trước
+        return (int) (id ^ (id >>> 32));
     }
 
     public static String getActiveDaysAsString(Alarm alarm) {

@@ -43,8 +43,8 @@
         android:layout_toRightOf="@+id/ar_am_pm"
         android:layout_toEndOf="@+id/ar_am_pm"
         android:layout_alignTop="@+id/ar_time"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"/>
+        android:layout_marginLeft="13dp"
+        android:layout_marginStart="13dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -76,7 +76,7 @@
         android:id="@+id/ar_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="12dp"
+        android:padding="8dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"

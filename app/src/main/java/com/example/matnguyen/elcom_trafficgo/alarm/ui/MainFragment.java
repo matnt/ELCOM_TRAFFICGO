@@ -41,7 +41,7 @@ public final class MainFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        final View v = inflater.inflate(R.layout.fragment_main, container, false);
+        final View v = inflater.inflate(R.layout.alarm_fragment_main, container, false);
         final EmptyRecyclerView rv =  v.findViewById(R.id.recycler);
         mAdapter = new AlarmsAdapter();
         rv.setEmptyView(v.findViewById(R.id.empty_view));

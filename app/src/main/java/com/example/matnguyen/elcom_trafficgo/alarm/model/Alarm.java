@@ -10,40 +10,6 @@ import java.lang.annotation.RetentionPolicy;
 
 public final class Alarm implements Parcelable {
 
-    private Alarm(Parcel in) {
-        id = in.readLong();
-        time = in.readLong();
-        label = in.readString();
-        allDays = in.readSparseBooleanArray();
-        isEnabled = in.readByte() != 0;
-    }
-
-    public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
-        @Override
-        public Alarm createFromParcel(Parcel in) {
-            return new Alarm(in);
-        }
-
-        @Override
-        public Alarm[] newArray(int size) {
-            return new Alarm[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeLong(id);
-        parcel.writeLong(time);
-        parcel.writeString(label);
-        parcel.writeSparseBooleanArray(allDays);
-        parcel.writeByte((byte) (isEnabled ? 1 : 0));
-    }
-
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({MON,TUES,WED,THURS,FRI,SAT,SUN})
     @interface Days{}
@@ -57,7 +23,7 @@ public final class Alarm implements Parcelable {
 
     private static final long NO_ID = -1;
 
-    private final long id;
+    private long id;
     private long time;
     private String label;
     private SparseBooleanArray allDays;
@@ -121,6 +87,42 @@ public final class Alarm implements Parcelable {
     public boolean isEnabled() {
         return isEnabled;
     }
+
+    private Alarm(Parcel in) {
+        id = in.readLong();
+        time = in.readLong();
+        label = in.readString();
+        allDays = in.readSparseBooleanArray();
+        isEnabled = in.readByte() != 0;
+    }
+
+    public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
+        @Override
+        public Alarm createFromParcel(Parcel in) {
+            return new Alarm(in);
+        }
+
+        @Override
+        public Alarm[] newArray(int size) {
+            return new Alarm[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(id);
+        parcel.writeLong(time);
+        parcel.writeString(label);
+        parcel.writeSparseBooleanArray(allDays);
+        parcel.writeByte((byte) (isEnabled ? 1 : 0));
+    }
+
+
 
     @Override
     public String toString() {

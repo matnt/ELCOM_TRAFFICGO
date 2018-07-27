@@ -30,8 +30,10 @@ public final class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         final Alarm alarm = intent.getParcelableExtra(ALARM_EXTRA);
-        final int id = AlarmUtils.getNotificationId(alarm);
+        int id = AlarmUtils.getNotificationId(alarm);
+        Log.e(TAG, "ID: "+ id);
 
+        // notification
         final NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         final Intent notifIntent = new Intent(context, AlarmLandingPageActivity.class);
@@ -74,7 +76,7 @@ public final class AlarmReceiver extends BroadcastReceiver {
 
         final Calendar nextAlarmTime = getTimeForNextAlarm(alarm);
         alarm.setTime(nextAlarmTime.getTimeInMillis());
-        Log.e(TAG, alarm.getId() + " - " + alarm.getTime());
+        //Log.e(TAG, nextAlarmTime.toString()) ;//+ alarm.getId() + " - " + alarm.getTime());
 
         final Intent intent = new Intent(context, AlarmReceiver.class);
         intent.putExtra(ALARM_EXTRA, alarm);
@@ -105,10 +107,13 @@ public final class AlarmReceiver extends BroadcastReceiver {
         Log.e(TAG, "get time for next alarm");
 
         final Calendar calendar = Calendar.getInstance();
+
         calendar.setTimeInMillis(alarm.getTime());
 
         final long currentTime = System.currentTimeMillis();
         final int startIndex = getStartIndexFromTime(calendar);
+
+        Log.e(TAG, "current time: " + currentTime + " - " + "start index: " + startIndex);
 
         int count = 0;
         boolean isAlarmSetForDay;
@@ -117,6 +122,7 @@ public final class AlarmReceiver extends BroadcastReceiver {
 
         do {
             final int index = (startIndex + count) % 7;
+            //Log.e(TAG, index + " ");
             isAlarmSetForDay =
                     daysArray.valueAt(index) && (calendar.getTimeInMillis() > currentTime);
             if(!isAlarmSetForDay) {
@@ -125,6 +131,7 @@ public final class AlarmReceiver extends BroadcastReceiver {
             }
         } while(!isAlarmSetForDay && count < 7);
 
+        Log.e(TAG, calendar.toString() + " ");
         return calendar;
 
     }
@@ -171,9 +178,7 @@ public final class AlarmReceiver extends BroadcastReceiver {
                 startIndex = 6;
                 break;
         }
-
         return startIndex;
-
     }
 
 }

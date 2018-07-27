@@ -59,8 +59,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
                 COL_FRI + " INTEGER NOT NULL, " +
                 COL_SAT + " INTEGER NOT NULL, " +
                 COL_SUN + " INTEGER NOT NULL, " +
-                COL_IS_ENABLED + " INTEGER NOT NULL" +
-                ");";
+                COL_IS_ENABLED + " INTEGER NOT NULL" + ");";
 
         sqLiteDatabase.execSQL(CREATE_ALARMS_TABLE);
 

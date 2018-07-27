@@ -18,10 +18,8 @@ public final class AlarmLandingPageActivity extends AppCompatActivity {
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
             );
         }
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_alarm_landing_page);
-
+        setContentView(R.layout.alarm_activity_landing_page);
     }
 
 }

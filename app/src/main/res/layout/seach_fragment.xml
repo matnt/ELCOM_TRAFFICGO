@@ -20,9 +20,5 @@
             android:layout_height="wrap_content">
         </android.support.v7.widget.RecyclerView>
     </LinearLayout>
-    <Button
-        android:text="Test"
-        android:layout_width="wrap_content"
-        android:layout_height="922dp" />
 
 </RelativeLayout>

@@ -2,12 +2,14 @@ package com.example.matnguyen.elcom_trafficgo;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Looper;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -15,10 +17,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.Selection;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -56,11 +60,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, iMap {
 
     private static final String TAG = "MapActivity";
+    private static final int REQUEST_CODE = 123;
     private GoogleMap mMap;
 
     private FloatingActionButton imgKindMap;
@@ -75,7 +81,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ////
     private FloatingActionButton fab_my_location, fab_go;
     private LinearLayout rl_search;
-    private ImageButton ibtn_voice, ibtn_seach;
+    private ImageButton ibtn_voice, ibtn_search;
     private EditText edt_search;
     private LinearLayout content_search;
 
@@ -92,6 +98,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private AT_Adapter mAutoCompleteAdapter;
     protected GoogleApiClient mGoogleApiClient;
 
+    ///
+    private int count_voice = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +109,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        Log.e(TAG,Environment.getDataDirectory().toString());
+
         fullScreen();
         buildGoogleApiClient();
         checkPermission();
@@ -120,11 +129,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         edt_search.addTextChangedListener(new TextWatcher() {
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().equals("") && mGoogleApiClient.isConnected()) {
+//                if (!s.toString().equals("") && mGoogleApiClient.isConnected()) {
+//                    mAutoCompleteAdapter.getFilter().filter(s.toString());
+//                } else if (!mGoogleApiClient.isConnected()) {
+//                    Toast.makeText(getApplicationContext(), TConfigs.API_NOT_CONNECTED, Toast.LENGTH_LONG).show();
+//                    Log.e(TConfigs.PlacesTag, TConfigs.API_NOT_CONNECTED);
+//                    Log.e(TAG, "API  NOT CONNECTED");
+//                }
+                if(!s.toString().equals("")){
                     mAutoCompleteAdapter.getFilter().filter(s.toString());
-                } else if (!mGoogleApiClient.isConnected()) {
-                    Toast.makeText(getApplicationContext(), TConfigs.API_NOT_CONNECTED, Toast.LENGTH_SHORT).show();
-                    Log.e(TConfigs.PlacesTag, TConfigs.API_NOT_CONNECTED);
+
                 }
 
             }
@@ -139,67 +153,67 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
         rcv_result_search.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        final AT_Adapter.PlaceAutocomplete item = mAutoCompleteAdapter.getItem(position);
-                        final String placeId = String.valueOf(item.placeId);
-                        Log.i("TAG", "Autocomplete item selected: " + item.placeName);
-                        /*
-                             Issue a request to the Places Geo Data API to retrieve a Place object with additional details about the place.
-                         */
+            new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    final AT_Adapter.PlaceAutocomplete item = mAutoCompleteAdapter.getItem(position);
+                    final String placeId = String.valueOf(item.placeId);
+                    Log.i("TAG", "Autocomplete item selected: " + item.placeName);
+                    /*
+                         Issue a request to the Places Geo Data API to retrieve a Place object with additional details about the place.
+                     */
 
-                        PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                                .getPlaceById(mGoogleApiClient, placeId);
-                        placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
-                            @Override
-                            public void onResult(PlaceBuffer places) {
-                                if (places.getCount() == 1) {
-                                    //Do the things here on Click.....
-                                    LatLng latLng = places.get(0).getLatLng();
+                    PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                            .getPlaceById(mGoogleApiClient, placeId);
+                    placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
+                        @Override
+                        public void onResult(PlaceBuffer places) {
+                            if (places.getCount() == 1) {
+                                //Do the things here on Click.....
+                                LatLng latLng = places.get(0).getLatLng();
 
-                                    MarkerOptions markerOptions = new MarkerOptions();
-                                    markerOptions.position(latLng);
-                                    markerOptions.title(places.get(0).getName().toString());
-                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                                MarkerOptions markerOptions = new MarkerOptions();
+                                markerOptions.position(latLng);
+                                markerOptions.title(places.get(0).getName().toString());
+                                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
-                                    mCurrLocationMarker = mMap.addMarker(markerOptions);
+                                mCurrLocationMarker = mMap.addMarker(markerOptions);
 
-                                    //move map camera
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                                //move map camera
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
 
-                                    if (flag_search == 1) {
-                                        flag_search = flag_search * -1;
-                                        ibtn_seach.setImageResource(R.drawable.ic_home_tab);
-                                        rl_search.setVisibility(View.GONE);
+                                if (flag_search == 1) {
+                                    flag_search = flag_search * -1;
+                                    ibtn_search.setImageResource(R.mipmap.ic_search);
+                                    rl_search.setVisibility(View.GONE);
 
-                                        Fragment fragment = fragmentManager.findFragmentById(R.id.content_search);
-                                        android.support.v4.app.FragmentTransaction ft_add = fragmentManager.beginTransaction();
-                                        ft_add.remove(fragment);
-                                        ft_add.commit();
+                                    Fragment fragment = fragmentManager.findFragmentById(R.id.content_search);
+                                    android.support.v4.app.FragmentTransaction ft_add = fragmentManager.beginTransaction();
+                                    ft_add.remove(fragment);
+                                    ft_add.commit();
 
-                                        //Ẩn bàn phím
-                                        edt_search.setFocusableInTouchMode(false);
-                                        edt_search.setFocusable(false);
-                                        edt_search.requestFocus();
+                                    //Ẩn bàn phím
+                                    edt_search.setFocusableInTouchMode(false);
+                                    edt_search.setFocusable(false);
+                                    edt_search.requestFocus();
 
-                                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                        imm.hideSoftInputFromWindow(edt_search.getWindowToken(), 0);
+                                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                    imm.hideSoftInputFromWindow(edt_search.getWindowToken(), 0);
 
-                                        edt_search.setText("");
-                                        mAutoCompleteAdapter.ClearData();
-                                    }
-
-
-                                } else {
-                                    Toast.makeText(getApplicationContext(), TConfigs.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
+                                    edt_search.setText("");
+                                    mAutoCompleteAdapter.ClearData();
                                 }
+
+
+                            } else {
+                                Toast.makeText(getApplicationContext(), TConfigs.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                             }
-                        });
-                        Log.i("TAG", "Clicked: " + item.placeName);
-                        Log.i("TAG", "Called getPlaceById to get Place details for " + item.placeId);
-                    }
-                }));
+                        }
+                    });
+                    Log.i("TAG", "Clicked: " + item.placeName);
+                    Log.i("TAG", "Called getPlaceById to get Place details for " + item.placeId);
+                }
+            }));
 
     }
 
@@ -220,13 +234,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-
         rl_search = findViewById(R.id.rl_search);
         rl_search.setVisibility(View.GONE);
 
         edt_search = findViewById(R.id.edt_search);
         ibtn_voice = findViewById(R.id.ibtn_voice);
-        ibtn_seach = findViewById(R.id.ibtn_seach);
+        ibtn_search = findViewById(R.id.ibtn_seach);
         content_search = findViewById(R.id.content_search);
 
 
@@ -245,21 +258,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
-                ibtn_seach.setImageResource(R.mipmap.ic_back);
-
-                android.support.v4.app.FragmentTransaction ft_add = fragmentManager.beginTransaction();
+                ibtn_search.setImageResource(R.mipmap.ic_back);
+                FragmentTransaction ft_add = fragmentManager.beginTransaction();
                 ft_add.add(R.id.content_search, new frag_search());
                 ft_add.commit();
 
             }
         });
 
-        ibtn_seach.setOnClickListener(new View.OnClickListener() {
+        ibtn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (flag_search == 1) {
+                if (flag_search == 1){
                     flag_search = flag_search * -1;
-                    ibtn_seach.setImageResource(R.drawable.ic_home_tab);
+                    ibtn_search.setImageResource(R.mipmap.ic_search);
                     rl_search.setVisibility(View.GONE);
 
                     Fragment fragment = fragmentManager.findFragmentById(R.id.content_search);
@@ -281,24 +293,73 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        PackageManager pm = getPackageManager();
+        List<ResolveInfo> activities = pm.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
+        if(activities.size() == 0){
+            ibtn_voice.setEnabled(false);
+            Toast.makeText(this, "THIS DEVICE IS NOT SUPPORTED MICROPHONE", Toast.LENGTH_SHORT).show();
+        }
+        ibtn_voice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(count_voice == 1) {
+                    startVoiceRecognition();
+                    count_voice++;
+                }
+                else {
+                    edt_search.setText(null);
+                    startVoiceRecognition();
+                    count_voice++;
+                }
+            }
+        });
+
+
         imgKindMap = findViewById(R.id.img_kind_map);
 
         imgKindMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Fragment_select_map choose_map = new Fragment_select_map();
-                choose_map.show(getSupportFragmentManager(), "FragmentChooseMap");
-
-//                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//                Fragment_choose_map choose_map = new Fragment_choose_map();
-//                transaction.add(R.id.rlt, choose_map);
-//                transaction.commit();
+            Fragment_select_map choose_map = new Fragment_select_map();
+            choose_map.show(getSupportFragmentManager(), "FragmentChooseMap");
 
             }
         });
 
     }
+
+    public void startVoiceRecognition(){
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice searching ....");
+
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE && resultCode == RESULT_OK){
+            final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            if(!matches.isEmpty()){
+                String query = matches.get(0);
+                edt_search.setText(query);
+                final int position = edt_search.length();
+                Log.e(TAG, "POSITION: "+ position);
+
+                edt_search.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        edt_search.setSelection(edt_search.length());
+                    }
+                });
+
+
+            }
+        }
+
+    }
+
 
 
     /**
@@ -347,7 +408,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onBackPressed() {
         if (flag_search == 1) {
             flag_search = flag_search * -1;
-            ibtn_seach.setImageResource(R.drawable.ic_home_tab);
+            ibtn_search.setImageResource(R.mipmap.ic_search);
             rl_search.setVisibility(View.GONE);
 
             Fragment fragment = fragmentManager.findFragmentById(R.id.content_search);
