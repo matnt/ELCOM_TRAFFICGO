@@ -44,9 +44,13 @@
         <activity android:name=".alarm.ui.AddEditAlarmActivity"></activity>
         <activity android:name=".alarm.ui.AlarmActivity"></activity>
         <activity android:name=".alarm.ui.AlarmLandingPageActivity"></activity>
+        <activity android:name=".searchRoutes.activities.SearchActivity"></activity>
+        <activity android:name=".searchRoutes.activities.SelectLocation"></activity>
         <service android:name=".alarm.service.LoadAlarmsService"/>
+        <service android:name=".searchRoutes.services.LoadHistoryService"/>
         <receiver android:name=".alarm.service.AlarmReceiver"/>
         <receiver android:name=".alarm.service.LoadAlarmsReceiver"/>
+
     </application>
 
 </manifest>

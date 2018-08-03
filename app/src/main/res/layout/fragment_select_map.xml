@@ -99,67 +99,6 @@
         </LinearLayout>
     </LinearLayout>
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/li_car"
-            android:layout_height="match_parent">
-
-            <ImageButton
-                android:id="@+id/img_car"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_car" />
-            <TextView
-                android:layout_width="match_parent"
-                android:text="Ô tô"
-                android:gravity="center"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/li_bike"
-            android:layout_height="match_parent">
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/img_bike"
-                android:src="@mipmap/ic_bike"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:text="Xe đạp"
-                android:gravity="center"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/li_walk"
-            android:layout_height="match_parent">
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:src="@mipmap/ic_walk"
-                android:id="@+id/img_walk"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:layout_width="match_parent"
-                android:text="Đi bộ"
-                android:gravity="center"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"

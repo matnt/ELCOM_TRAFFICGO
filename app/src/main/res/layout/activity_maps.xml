@@ -13,14 +13,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MapsActivity" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/img_kind_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="450dp"
+        android:layout_marginEnd="20dp"
+        android:src="@mipmap/ic_select_map"
+        android:layout_alignParentRight="true"
+        app:fabSize="mini"
+        android:layout_marginRight="15dp" />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_my_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/fab_go"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="16dp"
-        android:src="@mipmap/ic_my_location"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/ic_my_location"
         app:backgroundTint="#ffff"
         app:fabSize="normal" />
 
@@ -29,27 +43,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
-        android:src="@mipmap/ic_my_location"
-        app:backgroundTint="#1b24dc"
-        app:fabSize="normal" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/img_kind_map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="350dp"
+        android:src="@mipmap/ic_direction"
+        android:layout_marginBottom="300dp"
+        app:backgroundTint="#ffff"
+        app:fabSize="normal"
         android:layout_marginEnd="20dp"
-        android:src="@mipmap/ic_select_map"
-        android:layout_alignParentRight="true"
-        app:fabSize="mini"
-        android:layout_marginRight="25dp" />
+        android:layout_marginRight="15dp"
+        />
+
 
     <LinearLayout
-        android:paddingTop="88dp"
+        android:paddingTop="80dp"
         android:id="@+id/rl_search"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -88,7 +95,7 @@
         app:cardCornerRadius="8dp"
         android:background="#ffff"
         android:id="@+id/cardview"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="4dp"
         android:layout_marginLeft="4dp"
         android:layout_marginBottom="4dp"

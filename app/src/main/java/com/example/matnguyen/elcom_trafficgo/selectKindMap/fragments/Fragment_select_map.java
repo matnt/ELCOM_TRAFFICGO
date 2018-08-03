@@ -22,15 +22,13 @@ public class Fragment_select_map extends DialogFragment {
     private ImageButton img_satelite;
     private ImageButton img_traffic;
     private ImageButton img_density;
-    private ImageButton img_car;
-    private ImageButton img_bike;
-    private ImageButton img_walk;
+
     private Button btnDistance;
     private Button btnClock;
 
     public static iMap imap;
     private int s;
-
+    private int a;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,7 +36,6 @@ public class Fragment_select_map extends DialogFragment {
         initWidget(view);
 
         choose_kind_map();
-        choose_vehicle();
 
         henGio();
 
@@ -49,10 +46,6 @@ public class Fragment_select_map extends DialogFragment {
         img_density = view.findViewById(R.id.img_density);
         img_satelite = view.findViewById(R.id.img_satelite);
         img_traffic = view.findViewById(R.id.img_traffic);
-
-        img_bike =  view.findViewById(R.id.img_bike);
-        img_car = view.findViewById(R.id.img_car);
-        img_walk = view.findViewById(R.id.img_walk);
 
         btnClock = view.findViewById(R.id.btnClock);
         btnDistance = view.findViewById(R.id.btnDistance);
@@ -95,30 +88,6 @@ public class Fragment_select_map extends DialogFragment {
                 imap.selectTypeMap(s);
             }
         });
-    }
-
-
-    public void choose_vehicle(){
-        img_walk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        img_car.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        img_bike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        getDialog().dismiss();
     }
 
     public void henGio(){
