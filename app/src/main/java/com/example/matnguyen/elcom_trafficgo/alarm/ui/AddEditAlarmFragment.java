@@ -38,7 +38,7 @@ public final class AddEditAlarmFragment extends Fragment {
         Bundle args = new Bundle();
         args.putParcelable(AddEditAlarmActivity.ALARM_EXTRA, alarm);
 
-        Log.e(TAG, alarm.getId() + " - " + alarm.getTime() + " - " + alarm.getLabel());
+        //Log.e(TAG, alarm.getId() + " - " + alarm.getTime() + " - " + alarm.getLabel());
         AddEditAlarmFragment fragment = new AddEditAlarmFragment();
         fragment.setArguments(args);
         return fragment;

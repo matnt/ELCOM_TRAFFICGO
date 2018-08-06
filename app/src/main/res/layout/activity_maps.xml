@@ -34,7 +34,7 @@
         android:layout_above="@+id/fab_go"
         android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
-        android:src="@drawable/ic_my_location"
+        android:src="@mipmap/ic_my_location"
         app:backgroundTint="#ffff"
         app:fabSize="normal" />
 

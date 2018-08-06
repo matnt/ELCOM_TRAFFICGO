@@ -9,8 +9,6 @@ import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.util.SparseBooleanArray;
 
-
-import com.example.matnguyen.elcom_trafficgo.alarm.data.DatabaseHelper;
 import com.example.matnguyen.elcom_trafficgo.alarm.model.Alarm;
 
 import java.text.SimpleDateFormat;
@@ -79,7 +77,7 @@ public final class AlarmUtils {
         cv.put(COL_SAT, days.get(Alarm.SAT) ? 1 : 0);
         cv.put(COL_SUN, days.get(Alarm.SUN) ? 1 : 0);
 
-        cv.put(DatabaseHelper.COL_IS_ENABLED, alarm.isEnabled());
+        cv.put(COL_IS_ENABLED, alarm.isEnabled());
 
         return cv;
 

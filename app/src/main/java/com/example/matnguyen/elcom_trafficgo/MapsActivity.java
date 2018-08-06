@@ -117,8 +117,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     ///
     private boolean count_voice = false;
-    ArrayList<LatLng> arrayList;
-    private List<Polyline> polylines;
+    public static ArrayList<LatLng> arrayList;
+    private List<Polyline> mPolylines;
+    private List<PolylineOptions> mPolylinesOption;
     private static String vehicle = "driving";
 
 
@@ -131,41 +132,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         arrayList = new ArrayList<>();
 
-
-        buildGoogleApiClient();
+        mGoogleApiClient = GoogleServices.getInstance().buildGoogleApiClient(this);
+        //buildGoogleApiClient();
         checkPermission();
-        //deleteDatabase();
-        //checkSize();
         initWidget();
         getMyLocation();
         handleSearch();
         Fragment_select_map.imap = this;
     }
 
-    public void deleteDatabase(){
-        ArrayList<Point> arr = DatabasehistoryHelper.getInstance(this).getPoints();
-        int size = arr.size();
-        while (size != 0){
-            DatabasehistoryHelper.getInstance(this).deleteHistory(arr.get(size - 1));
-            size--;
-        }
-        Log.e(TAG, size + "");
-    }
-    public void checkSize(){
-        ArrayList<Point> arrayList = DatabasehistoryHelper.getInstance(this).getPoints();
-        Log.e(TAG, "size: " + arrayList.size());
-    }
+//    public void deleteDatabase(){
+//        ArrayList<Point> arr = DatabasehistoryHelper.getInstance(this).getPoints();
+//        int size = arr.size();
+//        while (size != 0){
+//            DatabasehistoryHelper.getInstance(this).deleteHistory(arr.get(size - 1));
+//            size--;
+//        }
+//        Log.e(TAG, size + "");
+//    }
+//    public void checkSize(){
+//        ArrayList<Point> arrayList = DatabasehistoryHelper.getInstance(this).getPoints();
+//        Log.e(TAG, "size: " + arrayList.size());
+//    }
 
-
-
-    private void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .build();
-    }
+//    private void buildGoogleApiClient() {
+//        mGoogleApiClient = new GoogleApiClient.Builder(this)
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .addApi(LocationServices.API)
+//                .addApi(Places.GEO_DATA_API)
+//                .build();
+//    }
 
     private void checkPermission() {
         int currentAPIVersion = Build.VERSION.SDK_INT;
@@ -183,7 +180,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void initWidget() {
-        polylines = new ArrayList<>();
+        mPolylines = new ArrayList<>();
+        mPolylinesOption = new ArrayList<>();
 
         rcv_result_search = findViewById(R.id.rcv_result_search);
         fragmentManager = getSupportFragmentManager();
@@ -195,7 +193,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fab_my_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), 15));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()) ,17.0f));
             }
         });
 
@@ -206,7 +204,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ibtn_voice = findViewById(R.id.ibtn_voice);
         ibtn_search = findViewById(R.id.ibtn_seach);
         content_search = findViewById(R.id.content_search);
-
 
         edt_search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,6 +216,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 edt_search.setFocusableInTouchMode(true);
                 edt_search.setFocusable(true);
                 edt_search.requestFocus();
+
                 //Show bàn phím
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
@@ -252,8 +250,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_search.getWindowToken(), 0);
 
-                    edt_search.setText("");
-                    mAutoCompleteAdapter.ClearData();
+                    edt_search.setText(null);
+                    //AutoCompleteAdapter.ClearData();
                 }
             }
         });
@@ -486,6 +484,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
 
+        // choose a location in map
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
@@ -510,6 +509,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
+
+        // click polyline in maps
+        mMap.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
+            @Override
+            public void onPolylineClick(Polyline polyline) {
+                polyline.setColor(Color.BLUE);
+                for(Polyline p : mPolylines){
+                    p.setColor(Color.GRAY);
+                }
+            }
+        });
+
+
+        // choose a route in map
+//        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+//            @Override
+//            public void onMapClick(LatLng latLng) {
+//
+//                for (PolylineOptions polyline : mPolylinesOption) {
+//                    for (LatLng polyCoords : polyline.getPoints()) {
+//                        float[] results = new float[1];
+//                        Location.distanceBetween(latLng.latitude, latLng.longitude,
+//                                polyCoords.latitude, polyCoords.longitude, results);
+//
+//                        if (results[0] < 100) {
+//                            // If distance is less than 100 meters, this is your polyline
+//                            Log.e(TAG, "Found @ "+latLng.latitude+" "+latLng.longitude);
+//                        }
+//                    }
+//                }
+//            }
+//        });
+
 
     }
 
@@ -658,10 +690,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void sharpRoute (LatLng latLng1, LatLng latLng2, String vehicle){
-        for(Polyline polyline : polylines) {
+        for(Polyline polyline : mPolylines) {
             polyline.remove();
         }
-        polylines.clear();
+        mPolylines.clear();
         String strurl = getRequestUrl(latLng1, latLng2, vehicle);
         TaskRequestDirection taskRequestDirection = new TaskRequestDirection();
         taskRequestDirection.execute(strurl);
@@ -708,7 +740,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String mode = "mode=" + vehicle;
         String param = str_org + "&" + str_des + "&" + mode;
         String output = "json";
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param;
+        String add = "&units=metric&alternatives=true";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param + add;
+
+        //&sensor=false&units=metric&alternatives=true
         Log.e(TAG, url);
 
         return url;
@@ -782,10 +817,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 }
                 polylineOptions.geodesic(true);
-                polylines.add(mMap.addPolyline(polylineOptions));
+                mPolylines.add(mMap.addPolyline(polylineOptions));
             }
-            if(polylines.size() != 0){
-                Log.e("DIRECTIONS PARSER", "SL Polyline: " + polylines.size());
+            if(mPolylines.size() != 0){
+                Log.e("DIRECTIONS PARSER", "SL Polyline: " + mPolylines.size());
             } else {
                 Toast.makeText(MapsActivity.this, "direction not found", Toast.LENGTH_LONG).show();
             }

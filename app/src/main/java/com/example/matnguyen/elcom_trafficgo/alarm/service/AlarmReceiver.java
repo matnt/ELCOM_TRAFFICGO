@@ -31,7 +31,7 @@ public final class AlarmReceiver extends BroadcastReceiver {
 
         final Alarm alarm = intent.getParcelableExtra(ALARM_EXTRA);
         int id = AlarmUtils.getNotificationId(alarm);
-        Log.e(TAG, "ID: "+ id);
+        //Log.e(TAG, "ID: "+ id);
 
         // notification
         final NotificationManager manager =
@@ -54,6 +54,7 @@ public final class AlarmReceiver extends BroadcastReceiver {
         builder.setContentIntent(pIntent);
         builder.setAutoCancel(true);
         builder.setPriority(Notification.PRIORITY_HIGH);
+
 
         manager.notify(id, builder.build());
 

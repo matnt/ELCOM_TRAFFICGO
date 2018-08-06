@@ -1,5 +1,6 @@
 package com.example.matnguyen.elcom_trafficgo.searchRoutes.activities;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
@@ -27,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.matnguyen.elcom_trafficgo.GoogleServices;
 import com.example.matnguyen.elcom_trafficgo.MapsActivity;
 import com.example.matnguyen.elcom_trafficgo.R;
 import com.example.matnguyen.elcom_trafficgo.searchRoutes.adapters.ListLocationAdapter;
@@ -38,6 +40,7 @@ import com.example.matnguyen.elcom_trafficgo.selectpoint.adapter.RecyclerItemCli
 import com.example.matnguyen.elcom_trafficgo.selectpoint.fragments.frag_search;
 import com.example.matnguyen.elcom_trafficgo.selectpoint.utils.TConfigs;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -56,6 +59,8 @@ import java.util.Locale;
 
 public class SelectLocation extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "SELECT LOCATION";
+    public static final int ERROR_DIALOG_REQUET = 9001;
+
     private ImageButton btnBack, btnVoice;
     private EditText edtLocation;
     private ListView listSpecial, listHistory;
@@ -72,7 +77,7 @@ public class SelectLocation extends FragmentActivity implements GoogleApiClient.
     private boolean check_search = false;
     private LinearLayout linearLayout_search;
     private LinearLayout linearlayout_specialplace;
-    private ArrayList<LatLng> arrLatlng;
+    //private ArrayList<LatLng> arrLatlng;
 
 
 
@@ -114,7 +119,7 @@ public class SelectLocation extends FragmentActivity implements GoogleApiClient.
         ArrayList<ItemList> arrayList = new ArrayList<>();
         ArrayList<Point> arr = DatabasehistoryHelper.getInstance(this).getPoints();
         Log.e(TAG, "SIZE: " + arr.size());
-        Log.e(TAG, arr.get(arr.size() - 1).getLat() + " - " + arr.get(arr.size() - 1).getLng());
+        //Log.e(TAG, arr.get(arr.size() - 1).getLat() + " - " + arr.get(arr.size() - 1).getLng());
         Log.e(TAG, arr.get(arr.size() - 1).getName());
         //String name = getAddress(arr.get(arr.size() - 1).getLat() , arr.get(arr.size() - 1).getLng());
         //Log.e(TAG, name);
@@ -150,11 +155,11 @@ public class SelectLocation extends FragmentActivity implements GoogleApiClient.
         linearlayout_specialplace = findViewById(R.id.layout_special_places);
 
         fragmentManager = getSupportFragmentManager();
-        mGoogleApiClient = MapsActivity.mGoogleApiClient;
+        mGoogleApiClient = GoogleServices.getInstance().buildGoogleApiClient(this);
 
         linearLayout_search.setVisibility(View.GONE);
         linearlayout_specialplace.setVisibility(View.VISIBLE);
-        arrLatlng = new ArrayList<>();
+        //arrLatlng = new ArrayList<>();
     }
 
     public void solve(){
@@ -209,13 +214,18 @@ public class SelectLocation extends FragmentActivity implements GoogleApiClient.
                     LatLng mCurr = new LatLng(MapsActivity.mLastLocation.getLatitude(), MapsActivity.mLastLocation.getLongitude());
                     if(receive.equals("Origin")){
                         String ss = getAddress(MapsActivity.mLastLocation.getLatitude(), MapsActivity.mLastLocation.getLongitude());
-                        arrLatlng.add(0, mCurr);
+                        //arrLatlng.add(0, mCurr);
+                        MapsActivity.arrayList.add(0, mCurr);
                         intent.putExtra("origin", ss);
+
+
                     } else {
                         // receive = "Destination"
                         String ss = getAddress(MapsActivity.mLastLocation.getLatitude(), MapsActivity.mLastLocation.getLongitude());
                         intent.putExtra("destination", ss);
-                        arrLatlng.add(1, mCurr);
+                        //arrLatlng.add(1, mCurr);
+                        MapsActivity.arrayList.add(1, mCurr);
+
                     }
                     startActivity(intent);
 
@@ -292,17 +302,19 @@ public class SelectLocation extends FragmentActivity implements GoogleApiClient.
 
         edtLocation.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().equals("") && mGoogleApiClient.isConnected()) {
+                if(!s.toString().equals(""))
                     mAutoCompleteAdapter.getFilter().filter(s.toString());
-                } else if (!mGoogleApiClient.isConnected()) {
-                    Toast.makeText(getApplicationContext(), TConfigs.API_NOT_CONNECTED, Toast.LENGTH_LONG).show();
-                    Log.e(TConfigs.PlacesTag, TConfigs.API_NOT_CONNECTED);
-                    Log.e(TAG, "API  NOT CONNECTED");
-                }
-//                if(!s.toString().equals("")){
+//                if (!s.toString().equals("") && mGoogleApiClient.isConnected()) {
 //                    mAutoCompleteAdapter.getFilter().filter(s.toString());
-//
+//                } else if (!mGoogleApiClient.isConnected()) {
+//                    Toast.makeText(getApplicationContext(), TConfigs.API_NOT_CONNECTED, Toast.LENGTH_LONG).show();
+//                    Log.e(TConfigs.PlacesTag, TConfigs.API_NOT_CONNECTED);
+//                    Log.e(TAG, "API  NOT CONNECTED");
 //                }
+////                if(!s.toString().equals("")){
+////                    mAutoCompleteAdapter.getFilter().filter(s.toString());
+////
+////                }
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -340,6 +352,15 @@ public class SelectLocation extends FragmentActivity implements GoogleApiClient.
                                     markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
                                     MapsActivity.mCurrLocationMarker = MapsActivity.mMap.addMarker(markerOptions);
+
+                                    if(receive.equals("Origin")){
+                                        //arrLatlng.add(0, latLng);
+                                        MapsActivity.arrayList.add(0, latLng);
+
+                                    } else if(receive.equals("Destination")){
+                                        //arrLatlng.add(1, latLng);
+                                        MapsActivity.arrayList.add(1, latLng);
+                                    }
 
                                     //move map camera
                                     MapsActivity.mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));

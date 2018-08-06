@@ -163,8 +163,8 @@ public class PlaceAutoCompleteAdapter extends RecyclerView.Adapter<PlaceAutoComp
     }
 
     public void ClearData() {
-        mResultList.clear();
-        notifyDataSetChanged();
+        //mResultList.clear();
+        //notifyDataSetChanged();
     }
 
 

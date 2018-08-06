@@ -67,12 +67,6 @@ public class DirectionsParser {
 
         }
 
-//        for(int i = 0; i < routes.size(); i++){
-//            Log.e("DIRECTION PARSER SIZE: ", routes.size() + " ");
-//            Log.e("DIRECTION PARSER",routes.get(i).toString());
-//        }
-
-
         return routes;
     }
 

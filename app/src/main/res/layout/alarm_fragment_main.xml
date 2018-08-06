@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:src="@mipmap/ic_add"
+        android:src="@mipmap/ic_alarm"
         android:layout_marginRight="16dp"
         android:layout_gravity="bottom|end"
         app:fabSize="normal"

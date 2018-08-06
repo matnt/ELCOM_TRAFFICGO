@@ -41,11 +41,12 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name=".alarm.ui.AddEditAlarmActivity"></activity>
-        <activity android:name=".alarm.ui.AlarmActivity"></activity>
-        <activity android:name=".alarm.ui.AlarmLandingPageActivity"></activity>
-        <activity android:name=".searchRoutes.activities.SearchActivity"></activity>
-        <activity android:name=".searchRoutes.activities.SelectLocation"></activity>
+        <activity android:name=".alarm.ui.AddEditAlarmActivity"/>
+        <activity android:name=".alarm.ui.AlarmActivity"/>
+        <activity android:name=".alarm.ui.AlarmLandingPageActivity"/>
+        <activity android:name=".searchRoutes.activities.SearchActivity"/>
+        <activity android:name=".searchRoutes.activities.SelectLocation"/>
+
         <service android:name=".alarm.service.LoadAlarmsService"/>
         <service android:name=".searchRoutes.services.LoadHistoryService"/>
         <receiver android:name=".alarm.service.AlarmReceiver"/>

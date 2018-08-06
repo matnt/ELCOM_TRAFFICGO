@@ -19,6 +19,7 @@
             android:layout_weight="1"
             android:id="@+id/btn_back"
             android:layout_marginTop="10dp"
+            android:background="#2459ea"
             android:src="@drawable/ic_back" />
 
         <LinearLayout
@@ -86,6 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
+                android:background="#2459ea"
                 android:src="@drawable/ic_exchange" />
 
 
@@ -99,6 +101,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ln_vehicle_top"
+
         android:orientation="horizontal">
 
         <ImageButton
