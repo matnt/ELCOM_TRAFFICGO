@@ -189,12 +189,21 @@ public class PlaceAutoCompleteAdapter extends RecyclerView.Adapter<PlaceAutoComp
         public CharSequence placeName;
         public CharSequence placeSecondary;
         public CharSequence placePrimary;
+        public double latitude;
+        public double longitude;
 
         PlaceAutocomplete(CharSequence placeId, CharSequence placeName, CharSequence placeSecondary, CharSequence placePrimary) {
             this.placeId = placeId;
             this.placeName = placeName;
             this.placeSecondary = placeSecondary;
             this.placePrimary = placePrimary;
+        }
+
+        PlaceAutocomplete(CharSequence placeId, CharSequence placeName, double lat, double lng){
+            this.placeId = placeId;
+            this.placeName = placeName;
+            this.latitude = lat;
+            this.longitude = lng;
         }
 
         @Override

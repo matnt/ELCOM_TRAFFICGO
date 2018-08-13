@@ -1,9 +1,11 @@
 package com.example.matnguyen.elcom_trafficgo.searchRoutes.data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.matnguyen.elcom_trafficgo.alarm.model.Alarm;
 import com.example.matnguyen.elcom_trafficgo.alarm.util.AlarmUtils;
@@ -14,7 +16,7 @@ import java.util.ArrayList;
 
 
 public class DatabasehistoryHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "history.db";
+    public static final String DATABASE_NAME = "history.db";
     private static final int SCHEMA = 1;
 
     private static final String TABLE_NAME = "history";
@@ -39,7 +41,7 @@ public class DatabasehistoryHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         final String CREATE_HISTORY_TABLE = "CREATE TABLE " + TABLE_NAME + " (" +
-                _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                _ID + " TEXT PRIMARY KEY , " +
                 COL_NAME + " VARCHAR, " +
                 COL_LAT + " FLOAT NOT NULL, " +
                 COL_LNG + " FLOAT NOT NULL " + ");";
@@ -53,27 +55,31 @@ public class DatabasehistoryHelper extends SQLiteOpenHelper {
         throw new UnsupportedOperationException("This shouldn't happen yet!");
     }
 
-    public float addHistory() {
-        return addHistory(new Point());
-    }
 
-    float addHistory(Point point) {
-        return getWritableDatabase().insert(TABLE_NAME, null, HistoryUtils.toContentValues(point));
+    public void addNewPoint(Point point){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues content = HistoryUtils.toContentValues(point);
+        //Log.e("DATABSE 2", point.getId());
+        db.insert(TABLE_NAME, null, content);
+        db.close();
     }
     public int updateHistory(Point point) {
+        Log.e("DATABASE", point.getId());
         final String where = _ID + "=?";
-        final String[] whereArgs = new String[] { Long.toString(point.getId()) };
+        final String[] whereArgs = new String[] { point.getId() };
         return getWritableDatabase()
                 .update(TABLE_NAME, HistoryUtils.toContentValues(point), where, whereArgs);
+
     }
     public int deleteHistory(Point point) {
         return deleteHistory(point.getId());
     }
 
-    int deleteHistory(long id) {
-        final String where = _ID + "=?";
-        final String[] whereArgs = new String[] { Long.toString(id) };
-        return getWritableDatabase().delete(TABLE_NAME, where, whereArgs);
+    int deleteHistory(String id) {
+       // final String where = _ID + "=?";
+        final String[] whereArgs = new String[] { id};
+        //return getWritableDatabase().delete(TABLE_NAME, where, whereArgs);
+        return getWritableDatabase().delete(TABLE_NAME, null, whereArgs);
     }
 
     public ArrayList<Point> getPoints() {

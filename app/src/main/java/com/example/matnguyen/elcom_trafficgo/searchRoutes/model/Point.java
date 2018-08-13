@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Point implements Parcelable {
-    private long id;
+    private String id;
     private String name;
     private double lat;
     private double lng;
@@ -12,25 +12,26 @@ public class Point implements Parcelable {
 
     }
 
-    public Point(long id){
+    public Point(String id){
         this.id = id;
     }
 
-    public Point(long id, String name, double lat, double lng){
+    public Point(String id, String name, double lat, double lng){
         this.id = id;
         this.name = name;
         this.lat = lat;
         this.lng = lng;
     }
 
-    public Point(long id, double lat, double lng){
-        this.id = id;
+
+    public Point(String name, double lat, double lng){
+        this.name = name;
         this.lat = lat;
         this.lng = lng;
     }
 
     protected Point(Parcel in) {
-        id = in.readLong();
+        id = in.readString();
         name = in.readString();
         lat = in.readDouble();
         lng = in.readDouble();
@@ -48,11 +49,11 @@ public class Point implements Parcelable {
         }
     };
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -87,7 +88,7 @@ public class Point implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeLong(id);
+        parcel.writeString(id);
         parcel.writeString(name);
         parcel.writeDouble(lat);
         parcel.writeDouble(lng);

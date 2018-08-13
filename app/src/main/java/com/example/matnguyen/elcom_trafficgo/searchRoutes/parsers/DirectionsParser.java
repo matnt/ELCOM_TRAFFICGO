@@ -157,11 +157,4 @@ public class DirectionsParser {
     }
 
 
-
-//    public enum Mode {
-//        DRIVING,
-//        WALKING,
-//        BICYCLING,
-//        TRANSIT
-//    }
 }

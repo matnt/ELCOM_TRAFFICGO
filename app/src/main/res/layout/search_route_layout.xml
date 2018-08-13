@@ -1,149 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#2459ea"
-    android:paddingTop="7dp"
-    android:orientation="horizontal">
+    android:layout_height="match_parent"
+    android:id="@+id/frame_search"
+    android:orientation="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
 
     <LinearLayout
-        android:id="@+id/ln_vehicle_top"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/linear_search_frag"
+            android:layout_height="wrap_content">
 
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/btn_back"
-            android:layout_marginTop="10dp"
-            android:background="#2459ea"
-            android:src="@drawable/ic_back" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnMyLocation"
-                android:src="@drawable/ic_my_location" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_more" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnLocation"
-                android:src="@drawable/ic_location" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="6"
-            android:orientation="vertical">
-
-            <TextView
+            <LinearLayout
+                android:id="@+id/ln_vehicle_top"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border"
-                android:padding="6dp"
-                android:text="Vị trí của bạn"
-                android:id="@+id/edt_origin"
-                android:textColor="#fff" />
-
-            <TextView
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border"
-                android:padding="6dp"
-                android:id="@+id/edt_dest"
-                android:textColor="#fff"
-                android:text="Vị trí đến" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-
-            <ImageButton
-                android:id="@+id/btn_exchange"
-                android:layout_width="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
                 android:background="#2459ea"
-                android:src="@drawable/ic_exchange" />
+                android:paddingTop="7dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/btn_back"
+                    android:layout_marginTop="10dp"
+                    android:background="#2459ea"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_back" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btnMyLocation"
+                        android:src="@drawable/ic_my_location" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_more" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btnLocation"
+                        android:src="@drawable/ic_location" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="6"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/border"
+                        android:padding="6dp"
+                        android:text="Vị trí của bạn"
+                        android:id="@+id/edt_origin"
+                        android:textColor="#fff" />
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/border"
+                        android:padding="6dp"
+                        android:id="@+id/edt_dest"
+                        android:textColor="#fff"
+
+                        android:text="Vị trí đến" />
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btn_exchange"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:background="#2459ea"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/ic_exchange" />
+            </LinearLayout>
 
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ln_vehicle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/ibt_car"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_weight="2"
+                    android:background="#2459ea"
+                    android:src="@drawable/ic_car" />
+
+                <ImageButton
+                    android:id="@+id/ibt_bike"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_weight="2"
+                    android:background="#2459ea"
+                    android:src="@drawable/ic_bike" />
+
+                <ImageButton
+                    android:id="@+id/ibt_bus"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_weight="2"
+                    android:background="#2459ea"
+                    android:src="@drawable/ic_transit" />
+
+                <ImageButton
+                    android:id="@+id/ibt_walk"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_weight="2"
+                    android:background="#2459ea"
+                    android:src="@drawable/ic_walk" />
+
+                <ImageButton
+                    android:id="@+id/ibt_beenhere"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_weight="2"
+                    android:background="#2459ea"
+                    android:src="@drawable/ic_checkbox" />
+            </LinearLayout>
+
 
     </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/ln_vehicle"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ln_vehicle_top"
+        android:text="SHOW LIST"
+        android:gravity="center"
+        android:background="#ffff"
+        android:layout_height="match_parent" />
 
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/ibt_car"
-            android:layout_width="0dp"
-            android:layout_height="46dp"
-            android:layout_weight="2"
-            android:background="#2459ea"
-            android:src="@drawable/ic_car" />
-
-        <ImageButton
-            android:id="@+id/ibt_bike"
-            android:layout_width="0dp"
-            android:layout_height="46dp"
-            android:layout_weight="2"
-            android:background="#2459ea"
-            android:src="@drawable/ic_bike" />
-
-        <ImageButton
-            android:id="@+id/ibt_bus"
-            android:layout_width="0dp"
-            android:layout_height="46dp"
-            android:layout_weight="2"
-            android:background="#2459ea"
-            android:src="@drawable/ic_transit" />
-
-        <ImageButton
-            android:id="@+id/ibt_walk"
-            android:layout_width="0dp"
-            android:layout_height="46dp"
-            android:layout_weight="2"
-            android:background="#2459ea"
-            android:src="@drawable/ic_walk" />
-
-        <ImageButton
-            android:id="@+id/ibt_beenhere"
-            android:layout_width="0dp"
-            android:layout_height="46dp"
-            android:layout_weight="2"
-            android:background="#2459ea"
-            android:src="@drawable/ic_checkbox" />
-    </LinearLayout>
-
-
-</RelativeLayout>
+</LinearLayout>
+</FrameLayout>

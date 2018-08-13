@@ -18,6 +18,7 @@ public final class HistoryUtils {
 
     public static ContentValues toContentValues(Point point) {
         final ContentValues cv = new ContentValues(10);
+        cv.put(_ID, point.getId());
         cv.put(COL_NAME, point.getName());
         cv.put(COL_LAT, point.getLat());
         cv.put(COL_LNG, point.getLng());
@@ -36,13 +37,13 @@ public final class HistoryUtils {
         if (c.moveToFirst()){
             do {
 
-                final long id = c.getLong(c.getColumnIndex(_ID));
+                final String id = c.getString(c.getColumnIndex(_ID));
                 final String name = c.getString(c.getColumnIndex(COL_NAME));
                 final float lat = c.getFloat(c.getColumnIndex(COL_LAT));
                 final float lng = c.getFloat(c.getColumnIndex(COL_LNG));
 
                 final Point point = new Point(id, name, lat, lng);
-                //final Point point = new Point(id, lat, lng);
+
                 points.add(point);
 
             } while (c.moveToNext());
