@@ -78,45 +78,51 @@ import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, iMap {
 
+    // final
     private static final String TAG = "MapActivity";
     public static final int REQUEST_CODE = 123;
     private static final int LOCATION_REQUEST = 500;
-    public static GoogleMap mMap;
 
+    ///google map
+    public static GoogleMap mMap;
     private LocationManager mLocationManager;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationRequest mLocationRequest;
     public static Location mLastLocation;
     public static Marker mCurrLocationMarker;
+    public static GoogleApiClient mGoogleApiClient;
 
-    ////
+    ////init
     private FloatingActionButton imgKindMap;
     private FloatingActionButton fab_my_location, fab_go;
-    private  LinearLayout rl_search;
+    private LinearLayout rl_search;
     private ImageButton ibtn_voice, ibtn_search;
-    private  EditText edt_search;
+    private EditText edt_search;
     private LinearLayout content_search;
     private CardView card;
+    private RecyclerView rcv_result_search;
+    private LinearLayoutManager mLinearLayoutManager;
 
     ////
     private static boolean flag_search = false;
-    private  FragmentManager fragmentManager;
-
-    ////
-    private  RecyclerView rcv_result_search;
-    private  LinearLayoutManager mLinearLayoutManager;
-    private  PlaceAutoCompleteAdapter mAutoCompleteAdapter;
-    public static GoogleApiClient mGoogleApiClient;
-
+    private FragmentManager fragmentManager;
+    private PlaceAutoCompleteAdapter mAutoCompleteAdapter;
 
     ///
     private boolean count_voice = false;
     public static ArrayList<LatLng> arrayList;
     public static ArrayList<Point> arrPoints = new ArrayList<>();
     private static List<Polyline> mPolylines;
-    private Fragment mapFrag;
+    //private Fragment mapFrag;
 
     private static String vehicle = "driving";
+
+    public static MapsActivity newInstance(){
+        MapsActivity mapsActivity = new MapsActivity();
+
+
+        return mapsActivity;
+    }
 
 
     @Override
@@ -170,7 +176,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
     private void initWidget() {
         mPolylines = new ArrayList<>();
-        //mPolylinesOption = new ArrayList<>();
 
         card = findViewById(R.id.cardview);
 
@@ -228,11 +233,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     ibtn_search.setImageResource(R.mipmap.ic_search);
                     rl_search.setVisibility(View.GONE);
 
-                    Fragment fragment = fragmentManager.findFragmentById(R.id.content_search);
-                    FragmentTransaction ft_add = fragmentManager.beginTransaction();
-                    ft_add.remove(fragment);
-                    ft_add.commit();
+//                    Fragment fragment = fragmentManager.findFragmentById(R.id.content_search);
+//                    FragmentTransaction ft_add = fragmentManager.beginTransaction();
+//                    ft_add.remove(fragment);
+//                    ft_add.commit();
+                    //fragmentManager.beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.content_search)).commit();
 
+                    MapsActivity.newInstance();
                     //Ẩn bàn phím
                     edt_search.setFocusableInTouchMode(false);
                     edt_search.setFocusable(false);
@@ -329,10 +336,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+
         rcv_result_search.addOnItemTouchListener(
             new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
                 @Override
-                public void onItemClick(View view, int position) {
+                public void onItemClick(View view, final int position) {
                     final PlaceAutoCompleteAdapter.PlaceAutocomplete item = mAutoCompleteAdapter.getItem(position);
                     final String placeId = String.valueOf(item.placeId);
                     Log.e("TAG", "Autocomplete item selected: " + item.placeName);
@@ -342,7 +350,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     p.setId(String.valueOf(item.placeId));
                     p.setName(String.valueOf(item.placeName));
 
-                    //final String id =  DatabasehistoryHelper.getInstance(getApplicationContext()).addNewPoint(p);
                     DatabasehistoryHelper.getInstance(getApplicationContext()).addNewPoint(p);
                     LoadHistoryService.launchLoadHistoryService(getApplicationContext());
                     final Point point = new Point();
@@ -373,37 +380,57 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     Toast.makeText(getApplicationContext(), "Update fail!", Toast.LENGTH_LONG).show();
                                     Log.e(TAG, "Update fail!");
                                 }
-
                                 MarkerOptions markerOptions = new MarkerOptions();
                                 markerOptions.position(latLng);
                                 markerOptions.title(places.get(0).getName().toString());
-                                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                                if(arrayList.size() == 2){
+                                    arrayList.clear();
+                                    mMap.clear();
+                                    arrayList.add(latLng);
+                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                                } else if(arrayList.size() == 1){
+                                    arrayList.add(latLng);
+                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+
+                                    String url = GoogleService.getRequestUrl(arrayList.get(0), arrayList.get(1), vehicle);
+                                    GoogleService.TaskRequestDirection taskRequestDirection = new GoogleService.TaskRequestDirection();
+                                    taskRequestDirection.execute(url);
+                                } else {
+                                    arrayList.add(latLng);
+                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                                }
+
+
+
+                                //markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
                                 mCurrLocationMarker = mMap.addMarker(markerOptions);
 
                                 //move map camera
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
 
+                                //fragmentManager.beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.content_search)).commit();
+
                                 if (flag_search) {
                                     flag_search = !flag_search;
                                     ibtn_search.setImageResource(R.mipmap.ic_search);
                                     rl_search.setVisibility(View.GONE);
 
-                                    Fragment fragment = fragmentManager.findFragmentById(R.id.content_search);
-                                    android.support.v4.app.FragmentTransaction ft_add = fragmentManager.beginTransaction();
-                                    ft_add.remove(fragment);
-                                    ft_add.commit();
+                                    //Fragment fragment = fragmentManager.findFragmentById(R.id.content_search);
+                                    //fragmentManager.beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.content_search)).commit();
+                                    MapsActivity.newInstance();
+                                    Log.e(TAG, "go here");
 
                                     //Ẩn bàn phím
-                                    edt_search.setFocusableInTouchMode(false);
-                                    edt_search.setFocusable(false);
-                                    edt_search.requestFocus();
-
+//                                    edt_search.setFocusableInTouchMode(false);
+//                                    edt_search.setFocusable(false);
+//                                    edt_search.requestFocus();
+//
                                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                     imm.hideSoftInputFromWindow(edt_search.getWindowToken(), 0);
 
                                     edt_search.setText("");
-                                    mAutoCompleteAdapter.ClearData();
+                                    //mAutoCompleteAdapter.ClearData();
                                 }
 
 
@@ -412,8 +439,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             }
                         }
                     });
-                    Log.i("TAG", "Clicked: " + item.placeName);
-                    Log.i("TAG", "Called getPlaceById to get Place details for " + item.placeId);
+                    Log.e("TAG", "Clicked: " + item.placeName);
+                    Log.e("TAG", "Called getPlaceById to get Place details for " + item.placeId);
                 }
             }));
 
@@ -693,7 +720,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // get direction between 2 point using map api
 
-    public static class TaskParser2 extends AsyncTask<String, Void, List<Route>> {
+    public static class TaskParser extends AsyncTask<String, Void, List<Route>> {
 
         @Override
         protected List<Route> doInBackground(String... strings) {
@@ -745,11 +772,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 mPolylines.add(polyline);
             }
-//            if(mPolylines.size() != 0){
-//                Log.e("DIRECTIONS PARSER", "SL Polyline: " + mPolylines.size());
-//            } else {
-//                //Toast.makeText(this, "direction not found", Toast.LENGTH_LONG).show();
-//            }
 
         }
     }

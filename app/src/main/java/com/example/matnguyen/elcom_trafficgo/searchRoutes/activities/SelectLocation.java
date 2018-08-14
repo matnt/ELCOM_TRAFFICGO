@@ -119,10 +119,7 @@ public class SelectLocation extends Fragment  {
         ArrayList<ItemList> arrayList = new ArrayList<>();
         ArrayList<Point> arr = DatabasehistoryHelper.getInstance(getActivity()).getPoints();
         Log.e(TAG, "SIZE: " + arr.size());
-        //Log.e(TAG, arr.get(arr.size() - 1).getLat() + " - " + arr.get(arr.size() - 1).getLng());
-        //Log.e(TAG, arr.get(arr.size() - 1).getName());
-        //String name = getAddress(arr.get(arr.size() - 1).getLat() , arr.get(arr.size() - 1).getLng());
-        //Log.e(TAG, name);
+
         for(Point p : arr){
 
             String name = p.getName();
@@ -255,27 +252,16 @@ public class SelectLocation extends Fragment  {
                 Point p = new Point(name, lat, lng);
 
                 // sent data to search fragment
-                //Bundle bundle = new Bundle();
                 Log.e(TAG, "receive: " + receive);
                 if(receive.equals("Origin")) {
                     SearchFragment.arr.add(0, p);
-                    //Log.e(TAG, "arr position 0: " + SearchFragment.arr.get(0).getName());
-                    SearchFragment.edtOrigin.setText(p.getName());
-                    //bundle.putParcelable("Point origin", p);
-                    Log.e(TAG, "Origin " + SearchFragment.arr.size() + " - " + SearchFragment.arr.get(0).getName());
+
                 } else if(receive.equals("Destination")){
                     SearchFragment.arr.add(1, p);
-                    SearchFragment.edtDest.setText(p.getName());
-                    Log.e(TAG, "Destination " + SearchFragment.arr.size() + " - " + SearchFragment.arr.get(1).getName());
-                    //bundle.putParcelable("Point destination", p);
+
                 }
-                //SearchFragment.instantiate(getActivity(), SearchFragment.class.getName(), bundle);
-                //Log.e(TAG, "SEARCH FRAGMENT");
 
                 SearchFragment searchFragment = SearchFragment.newInstance(receive, p);
-                //SearchFragment searchFragment = new SearchFragment();
-                //searchFragment.setArguments(bundle);
-
                 getChildFragmentManager().beginTransaction().replace(R.id.select, searchFragment).addToBackStack(null).commit();
             }
         });

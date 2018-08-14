@@ -19,7 +19,7 @@ import java.net.URL;
 
 public class GoogleService {
     private static final String TAG = "GOOGLE SERVICE";
-    public String activity;
+    //public String activity;
 
     public static String requestDirection(String urlReq) throws IOException {
         String responeString = "";
@@ -65,7 +65,6 @@ public class GoogleService {
         //String key = "AIzaSyAxq6ocfyyURFVv-EDcJx1b2N8v1m_N0vI";
         String url = "https://maps.googleapis.com/maps/api/directions/"+ output + "?" + param + add;
 
-        //&sensor=false&units=metric&alternatives=true
         Log.e(TAG, url);
 
         return url;
@@ -90,7 +89,7 @@ public class GoogleService {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             //TaskParser taskParser = new TaskParser();
-            MapsActivity.TaskParser2 taskParser = new MapsActivity.TaskParser2();
+            MapsActivity.TaskParser taskParser = new MapsActivity.TaskParser();
             Log.e(TAG, "go to on post excute");
             taskParser.execute(s);
         }

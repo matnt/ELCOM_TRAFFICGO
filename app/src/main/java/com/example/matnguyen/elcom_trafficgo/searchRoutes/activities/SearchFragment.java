@@ -23,7 +23,6 @@ import java.util.ArrayList;
 
 public class SearchFragment extends Fragment  {
     private static final String TAG = " SEARCH ACTIVITY";
-    SearchFragment mContent;
 
     public static LatLng mLastlocation;
 
@@ -42,22 +41,16 @@ public class SearchFragment extends Fragment  {
     public static SearchFragment newInstance(String title, Point point) {
         SearchFragment searchFragment = new SearchFragment();
         Log.e(TAG, "GO TO NEW INSTANCE");
+
         if(title.equals("Origin")){
-            Log.e(TAG, point.getName());
-
             edtOrigin.setText(point.getName());
-            //arr.add(0, point);
             Log.e(TAG, "EDIT ORIGIN: " + edtOrigin.getText());
-            //edtOrigin.setText(point.getName());
-        } else if(title.equals("Destination")){
 
+        } else if(title.equals("Destination")){
             edtDest.setText(point.getName());
-           // arr.add(1, point);
             Log.e(TAG, "EDIT DESTINATION: " + edtDest.getText());
         }
         titleAction = title;
-
-
         return searchFragment;
     }
 
@@ -66,48 +59,36 @@ public class SearchFragment extends Fragment  {
         Bundle outState = new Bundle();
         if(arr.size() == 1) {
             if (title.equals("Origin")) {
-                outState.putParcelable("Point origin", arr.get(0));
+                outState.putParcelable("Point_origin", arr.get(0));
 
             } else if (title.equals("Destination")) {
-                outState.putParcelable("Point destination", arr.get(1));
+                outState.putParcelable("Point_destination", arr.get(1));
 
             }
         }
          else if(arr.size() == 2){
-            outState.putParcelable("Point origin", arr.get(0));
-            outState.putParcelable("Point destination", arr.get(1));
-
+            outState.putParcelable("Point_origin", arr.get(0));
+            outState.putParcelable("Point_destination", arr.get(1));
         }
-//        outState.putString("Point origin", (String) edtOrigin.getText());
-//        outState.putString("Point destination", (String)edtDest.getText());
 
         return outState;
 
     }
-//    @Override
-//    public void onSaveInstanceState(@NonNull Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        Log.e(TAG, "onSaveInstanceState");
-//        Log.e(TAG, "size: " +arr.size());
-//
-//
-//    }
 
-        @Override
+
+    @Override
     public View onCreateView( LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.search_route_layout, container, false);
         Log.e(TAG, "onCreateView");
 
-        //savedInstanceState = saveInstance(titleAction);
         if(savedInstanceState != null) {
             Log.e(TAG, "GO TO OLD FRAGMENT");
         } else {
             Log.e(TAG, "GO TO NEW FRAGMENT");
-
         }
-            initWidget(view);
-            solve();
-            search();
+        initWidget(view);
+        solve();
+        search();
 
         return view;
     }
@@ -119,8 +100,8 @@ public class SearchFragment extends Fragment  {
         savedInstanceState = saveInstance(titleAction);
         Log.e(TAG, "onActivityCreated");
         if(savedInstanceState != null) {
-            Point p1 = savedInstanceState.getParcelable("Point origin");
-            Point p2 = savedInstanceState.getParcelable("Point destination");
+            Point p1 = savedInstanceState.getParcelable("Point_origin");
+            Point p2 = savedInstanceState.getParcelable("Point_destination");
             if(p1 != null) {
                 edtOrigin.setText(p1.getName());
             }
@@ -173,24 +154,24 @@ public class SearchFragment extends Fragment  {
 //    }
 
     // get intent
-    public void getIntentFromFragment(){
-        if (getArguments().getParcelable("Point") != null){
-            Point point= getArguments().getParcelable("Point");
-            arr.add(point);
-        }
-
-        if(getArguments().getParcelable("Point origin") != null){
-            Point p1 = getArguments().getParcelable("Point origin");
-            arr.add(0, p1);
-        }
-
-        if(getArguments().getParcelable("Point destination") != null){
-            Point p2 = getArguments().getParcelable("Point destination");
-            arr.add(1, p2);
-        }
-
-
-    }
+//    public void getIntentFromFragment(){
+//        if (getArguments().getParcelable("Point") != null){
+//            Point point= getArguments().getParcelable("Point");
+//            arr.add(point);
+//        }
+//
+//        if(getArguments().getParcelable("Point origin") != null){
+//            Point p1 = getArguments().getParcelable("Point origin");
+//            arr.add(0, p1);
+//        }
+//
+//        if(getArguments().getParcelable("Point destination") != null){
+//            Point p2 = getArguments().getParcelable("Point destination");
+//            arr.add(1, p2);
+//        }
+//
+//
+//    }
     public void initWidget(View view) {
 
         btnBack = view.findViewById(R.id.btn_back);
@@ -205,16 +186,14 @@ public class SearchFragment extends Fragment  {
         btnWalk = view.findViewById(R.id.ibt_walk);
         btnBus = view.findViewById(R.id.ibt_bus);
 
-        //arr = new ArrayList<>();
-//        linearLayout = view.findViewById(R.id.frame_search);
     }
 
     public void solve() {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent i = new Intent(getActivity(), MapsActivity.class);
-//                startActivity(i);
+                Intent i = new Intent(getActivity(), MapsActivity.class);
+                startActivity(i);
             }
         });
         btnExchange.setOnClickListener(new View.OnClickListener() {
@@ -283,8 +262,6 @@ public class SearchFragment extends Fragment  {
                 frag_select.setArguments(bundle);
 
                 getChildFragmentManager().beginTransaction().replace(R.id.frame_search, frag_select).addToBackStack(null).commit();
-
-                //linearLayout.setVisibility(View.GONE);
             }
         });
         edtDest.setOnClickListener(new View.OnClickListener() {
@@ -296,7 +273,6 @@ public class SearchFragment extends Fragment  {
                 frag_select.setArguments(bundle);
 
                 getChildFragmentManager().beginTransaction().replace(R.id.frame_search, frag_select).addToBackStack(null).commit();
-                //linearLayout.setVisibility(View.GONE);
 
             }
         });
@@ -374,8 +350,11 @@ public class SearchFragment extends Fragment  {
             // add 2 marker and draw routes
 //            Bundle bundle = new Bundle();
 //            bundle.putSerializable("arraylistPoint", arr);
+
             MapsActivity.arrPoints.add(0, arr.get(0));
             MapsActivity.arrPoints.add(1, arr.get(1));
+            Intent i = new Intent(getActivity(), MapsActivity.class);
+            startActivity(i);
 
         }
     }

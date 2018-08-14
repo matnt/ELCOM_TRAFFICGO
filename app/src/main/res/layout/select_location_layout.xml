@@ -37,7 +37,7 @@
                         android:layout_marginTop="4dp"/>
 
                     <LinearLayout
-                        android:id="@+id/content_search"
+                        android:id="@+id/content_search1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="4dp"
