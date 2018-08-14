@@ -110,7 +110,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     ///
     private boolean count_voice = false;
-    public static ArrayList<LatLng> arrayList;
+    public static ArrayList<LatLng> arrayList = new ArrayList<>();
     public static ArrayList<Point> arrPoints = new ArrayList<>();
     private static List<Polyline> mPolylines;
     //private Fragment mapFrag;
@@ -137,7 +137,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // get auto my location
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
 
-        arrayList = new ArrayList<>();
+        //arrayList = new ArrayList<>();
 
         // delete database
         //MapsActivity.this.deleteDatabase(DatabasehistoryHelper.DATABASE_NAME);
@@ -255,7 +255,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
         PackageManager pm = getPackageManager();
-        List<ResolveInfo> activities = pm.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
+        final List<ResolveInfo> activities = pm.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
         if(activities.size() == 0){
             ibtn_voice.setEnabled(false);
             Toast.makeText(this, "THIS DEVICE IS NOT SUPPORTED MICROPHONE", Toast.LENGTH_SHORT).show();
@@ -290,16 +290,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @SuppressLint("RestrictedApi")
             @Override
             public void onClick(View view) {
-
+                Log.e(TAG, "Click fab go");
+                Log.e(TAG, "arraylist size: " + arrayList.size());
 
                 fab_go.setVisibility(View.GONE);
                 fab_my_location.setVisibility(View.GONE);
                 card.setVisibility(View.GONE);
                 imgKindMap.setVisibility(View.GONE);
                 // set visiable map
+                if(arrPoints.size() > 0){
+                    Log.e(TAG, "ARRAY LIST SIZE: " + arrPoints.size());
+                    Log.e(TAG, "item 1: " + arrPoints.get(0).getLng() + " item 2: " + arrPoints.get(1).getLng());
+                    if(arrPoints.size() == 2){
+                        arrPoints = new ArrayList<>();
+                    }
 
-                SearchFragment searchFragment = new SearchFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.rlt, searchFragment).addToBackStack(null).commit();
+                    SearchFragment searchFragment = SearchFragment.newInstance("NONE", null);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.rlt, searchFragment).addToBackStack(null).commit();
+                    //SearchFragment.newInstance("NONE", null);
+                } else {
+                    Log.e(TAG, "SEARCH FRAGMENT");
+                    SearchFragment searchFragment = new SearchFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.rlt, searchFragment).addToBackStack(null).commit();
+                }
+
+
 //                Intent intent = new Intent(MapsActivity.this, SearchFragment.class);
 //                startActivity(intent);
 
@@ -547,10 +562,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void searchAuto(){
+        Log.e(TAG, "AUTO SEARCH");
         //arrPoints = SearchFragment.arr;
         if(arrPoints.size() == 2) {
             LatLng latlng1 = new LatLng(arrPoints.get(0).getLat(), arrPoints.get(0).getLng());
             LatLng latlng2 = new LatLng(arrPoints.get(1).getLat(), arrPoints.get(1).getLng());
+            Log.e(TAG, "item 1: " + latlng1.latitude + ", " + latlng1.longitude + " item 2: " + latlng2.latitude + ", " + latlng2.longitude);
             // add start marker
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latlng1);
@@ -563,6 +580,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.addMarker(markerOptions1);
             // draw route
             String url = GoogleService.getRequestUrl(latlng1, latlng2, vehicle);
+            Log.e(TAG, url);
             GoogleService.TaskRequestDirection taskRequestDirection = new GoogleService.TaskRequestDirection();
             taskRequestDirection.execute(url);
         }
