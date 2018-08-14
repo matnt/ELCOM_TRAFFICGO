@@ -111,9 +111,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ///
     private boolean count_voice = false;
     public static ArrayList<LatLng> arrayList = new ArrayList<>();
-    public static ArrayList<Point> arrPoints = new ArrayList<>();
     private static List<Polyline> mPolylines;
-    //private Fragment mapFrag;
 
     private static String vehicle = "driving";
 
@@ -136,8 +134,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // get auto my location
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
-
-        //arrayList = new ArrayList<>();
 
         // delete database
         //MapsActivity.this.deleteDatabase(DatabasehistoryHelper.DATABASE_NAME);
@@ -218,10 +214,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
                 ibtn_search.setImageResource(R.drawable.ic_back);
-//                FragmentTransaction ft_add = fragmentManager.beginTransaction();
-//                ft_add.add(R.id.content_search, new frag_search());
-//                ft_add.commit();
-
             }
         });
 
@@ -233,13 +225,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     ibtn_search.setImageResource(R.mipmap.ic_search);
                     rl_search.setVisibility(View.GONE);
 
-//                    Fragment fragment = fragmentManager.findFragmentById(R.id.content_search);
-//                    FragmentTransaction ft_add = fragmentManager.beginTransaction();
-//                    ft_add.remove(fragment);
-//                    ft_add.commit();
-                    //fragmentManager.beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.content_search)).commit();
-
                     MapsActivity.newInstance();
+
                     //Ẩn bàn phím
                     edt_search.setFocusableInTouchMode(false);
                     edt_search.setFocusable(false);
@@ -298,25 +285,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 card.setVisibility(View.GONE);
                 imgKindMap.setVisibility(View.GONE);
                 // set visiable map
-                if(arrPoints.size() > 0){
-                    Log.e(TAG, "ARRAY LIST SIZE: " + arrPoints.size());
-                    Log.e(TAG, "item 1: " + arrPoints.get(0).getLng() + " item 2: " + arrPoints.get(1).getLng());
-                    if(arrPoints.size() == 2){
-                        arrPoints = new ArrayList<>();
+                if(arrayList.size() > 0){
+                    if(arrayList.size() == 2){
+                        arrayList = new ArrayList<>();
                     }
-
                     SearchFragment searchFragment = SearchFragment.newInstance("NONE", null);
                     getSupportFragmentManager().beginTransaction().replace(R.id.rlt, searchFragment).addToBackStack(null).commit();
-                    //SearchFragment.newInstance("NONE", null);
                 } else {
                     Log.e(TAG, "SEARCH FRAGMENT");
                     SearchFragment searchFragment = new SearchFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.rlt, searchFragment).addToBackStack(null).commit();
                 }
-
-
-//                Intent intent = new Intent(MapsActivity.this, SearchFragment.class);
-//                startActivity(intent);
 
             }
         });
@@ -431,16 +410,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     ibtn_search.setImageResource(R.mipmap.ic_search);
                                     rl_search.setVisibility(View.GONE);
 
-                                    //Fragment fragment = fragmentManager.findFragmentById(R.id.content_search);
-                                    //fragmentManager.beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.content_search)).commit();
                                     MapsActivity.newInstance();
                                     Log.e(TAG, "go here");
 
                                     //Ẩn bàn phím
-//                                    edt_search.setFocusableInTouchMode(false);
-//                                    edt_search.setFocusable(false);
-//                                    edt_search.requestFocus();
-//
                                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                     imm.hideSoftInputFromWindow(edt_search.getWindowToken(), 0);
 
@@ -563,14 +536,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void searchAuto(){
         Log.e(TAG, "AUTO SEARCH");
-        //arrPoints = SearchFragment.arr;
-        if(arrPoints.size() == 2) {
-            LatLng latlng1 = new LatLng(arrPoints.get(0).getLat(), arrPoints.get(0).getLng());
-            LatLng latlng2 = new LatLng(arrPoints.get(1).getLat(), arrPoints.get(1).getLng());
-            Log.e(TAG, "item 1: " + latlng1.latitude + ", " + latlng1.longitude + " item 2: " + latlng2.latitude + ", " + latlng2.longitude);
+        Log.e(TAG, "size: " + arrayList.size());
+
             // add start marker
+            if(arrayList.size() == 2) {
+                LatLng latLng1 = new LatLng(arrayList.get(0).latitude, arrayList.get(0).longitude);
+                LatLng latlng2 = new LatLng(arrayList.get(1).latitude, arrayList.get(1).longitude);
             MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(latlng1);
+            markerOptions.position(latLng1);
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             mMap.addMarker(markerOptions);
             // add end marker
@@ -579,7 +552,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             markerOptions1.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
             mMap.addMarker(markerOptions1);
             // draw route
-            String url = GoogleService.getRequestUrl(latlng1, latlng2, vehicle);
+            String url = GoogleService.getRequestUrl(latLng1, latlng2, vehicle);
             Log.e(TAG, url);
             GoogleService.TaskRequestDirection taskRequestDirection = new GoogleService.TaskRequestDirection();
             taskRequestDirection.execute(url);

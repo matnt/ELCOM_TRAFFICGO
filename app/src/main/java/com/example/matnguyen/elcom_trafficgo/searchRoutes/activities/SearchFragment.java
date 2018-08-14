@@ -44,12 +44,11 @@ public class SearchFragment extends Fragment  {
 
         if(title.equals("Origin")){
             edtOrigin.setText(point.getName());
-            MapsActivity.arrayList.add(0, new LatLng(point.getLat(), point.getLng()));
+
             Log.e(TAG, "EDIT ORIGIN: " + edtOrigin.getText());
 
         } else if(title.equals("Destination")){
             edtDest.setText(point.getName());
-            MapsActivity.arrayList.add(1, new LatLng(point.getLat(), point.getLng()));
             Log.e(TAG, "EDIT DESTINATION: " + edtDest.getText());
         } else if(title.equals("NONE")) {
             Log.e(TAG, "NONE");
@@ -63,6 +62,7 @@ public class SearchFragment extends Fragment  {
 
     public Bundle saveInstance(String title){
         Log.e(TAG, "size arr: " + arr.size());
+        Log.e(TAG, "size arr of main activity: " + MapsActivity.arrayList.size());
         Bundle outState = null;
         if(arr.size() == 1) {
             outState = new Bundle();
@@ -121,8 +121,6 @@ public class SearchFragment extends Fragment  {
             if(titleAction.equals("NONE")){
                 arr = new ArrayList<>();
             }
-
-            //arr = new ArrayList<>();
         }
         initWidget(view);
         solve();
@@ -132,64 +130,6 @@ public class SearchFragment extends Fragment  {
     }
 
 
-    //    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.search_route_layout);
-//
-//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
-//        mapFragment.getMapAsync(this);
-//        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(SearchFragment.this);
-//
-//        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-//        buildGoogleApiClient();
-//        initWidget();
-//
-//        //intent after enter place name in select location
-////        Intent intent = getIntent();
-////        if (intent != null) {
-////            String s = null;
-////            if ((s = intent.getStringExtra("origin")) != null) {
-////                Log.e(TAG, s+"");
-////                edtOrigin.setText(s);
-////            } else {
-////                Log.e(TAG, s+"");
-////                edtDest.setText(s);
-////            }
-////        }
-////        Log.e(TAG, "not intent");
-//        solve();
-//        search();
-//
-//    }
-//    public void buildGoogleApiClient( ) {
-//        mGoogleApiClient = new GoogleApiClient.Builder(this)
-//                .addConnectionCallbacks(this)
-//                .addOnConnectionFailedListener(this)
-//                .addApi(LocationServices.API)
-//                .addApi(Places.GEO_DATA_API)
-//                .build();
-//    }
-
-    // get intent
-//    public void getIntentFromFragment(){
-//        if (getArguments().getParcelable("Point") != null){
-//            Point point= getArguments().getParcelable("Point");
-//            arr.add(point);
-//        }
-//
-//        if(getArguments().getParcelable("Point origin") != null){
-//            Point p1 = getArguments().getParcelable("Point origin");
-//            arr.add(0, p1);
-//        }
-//
-//        if(getArguments().getParcelable("Point destination") != null){
-//            Point p2 = getArguments().getParcelable("Point destination");
-//            arr.add(1, p2);
-//        }
-//
-//
-//    }
     public void initWidget(View view) {
 
         btnBack = view.findViewById(R.id.btn_back);
@@ -366,11 +306,9 @@ public class SearchFragment extends Fragment  {
     public void search(){
         if(arr.size() == 2){
             // add 2 marker and draw routes
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("arraylistPoint", arr);
 
-            MapsActivity.arrPoints.add(0, arr.get(0));
-            MapsActivity.arrPoints.add(1, arr.get(1));
+            MapsActivity.arrayList.add(0, new LatLng(arr.get(0).getLat(), arr.get(0).getLng()));
+            MapsActivity.arrayList.add(1, new LatLng(arr.get(1).getLat(), arr.get(1).getLng()));
             Intent i = new Intent(getActivity(), MapsActivity.class);
             startActivity(i);
 
