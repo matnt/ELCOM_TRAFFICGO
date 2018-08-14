@@ -62,20 +62,16 @@ public class SelectLocation extends Fragment  {
     private EditText edtLocation;
     private ListView listSpecial, listHistory;
     private String receive;
-    //private FragmentManager fragmentManager;
 
     ///
     private int count_voice;
     private PlaceAutoCompleteAdapter mAutoCompleteAdapter;
-    //public GoogleApiClient mGoogleApiClient;
-    private LinearLayoutManager mLinearLayout;
 
+    private LinearLayoutManager mLinearLayout;
     private RecyclerView rcv_result_search;
     private boolean check_search = false;
     private LinearLayout linearLayout_search;
     private LinearLayout linearlayout_specialplace;
-    //private ArrayList<LatLng> arrLatlng;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,10 +85,8 @@ public class SelectLocation extends Fragment  {
         getIntentFromHistory();
         solve();
         search();
-        //handsearch();
 
         return view;
-
     }
 
     public void getIntentFromSearchActivity(){
@@ -206,33 +200,30 @@ public class SelectLocation extends Fragment  {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i == 0){
                     // vị trí của bạn
-                    Intent intent = new Intent(getActivity(), SearchFragment.class);
-                    LatLng mCurr = new LatLng(SearchFragment.mLastlocation.latitude, SearchFragment.mLastlocation.longitude);
+                    LatLng mCurr = new LatLng(MapsActivity.mLastLocation.getLatitude(), MapsActivity.mLastLocation.getLongitude());
+                    Log.e(TAG, "Current location: " + MapsActivity.mLastLocation.getLatitude() + ", " + MapsActivity.mLastLocation.getLongitude());
                     String ss = getAddress(mCurr);
+                    Point point = new Point(ss, mCurr.latitude, mCurr.longitude);
+                    Log.e(TAG, ss);
 
                     if(receive.equals("Origin")){
-
-                        //arrLatlng.add(0, mCurr);
-                        //MapsActivity.arrayList.add(0, mCurr);
-                        intent.putExtra("origin", ss);
-
+                        SearchFragment.arr.add(0, point);
 
                     } else {
-                        // receive = "Destination"
-
-                        intent.putExtra("destination", ss);
-                        //arrLatlng.add(1, mCurr);
-                        //MapsActivity.arrayList.add(1, mCurr);
+                        SearchFragment.arr.add(1, point);
 
                     }
-                    startActivity(intent);
+                    SearchFragment search = SearchFragment.newInstance(receive,  ss);
+                    getChildFragmentManager().beginTransaction().replace(R.id.select, search).addToBackStack(null).commit();
+
 
                 } else {
                     // chọn trên bản đồ
                     Intent intent  = new Intent(getActivity(), MapsActivity.class);
                     startActivity(intent);
 
-
+//                    SearchFragment search = SearchFragment.newInstance(receive, null, null);
+//                    getChildFragmentManager().beginTransaction().replace(R.id.select, search).addToBackStack(null).commit();
 
 
 
@@ -261,7 +252,7 @@ public class SelectLocation extends Fragment  {
 
                 }
 
-                SearchFragment searchFragment = SearchFragment.newInstance(receive, p);
+                SearchFragment searchFragment = SearchFragment.newInstance(receive,  null);
                 getChildFragmentManager().beginTransaction().replace(R.id.select, searchFragment).addToBackStack(null).commit();
             }
         });

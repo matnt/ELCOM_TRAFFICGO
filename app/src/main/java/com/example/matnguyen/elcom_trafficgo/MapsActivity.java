@@ -144,7 +144,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         handleSearch();
         searchAuto();
-        Fragment_select_map.imap = this;
+        Fragment_select_map.imapKind = this;
+        SearchFragment.iVehicle = this;
     }
 
 

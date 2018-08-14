@@ -24,7 +24,6 @@ import java.util.ArrayList;
 public class SearchFragment extends Fragment  {
     private static final String TAG = " SEARCH ACTIVITY";
 
-    public static LatLng mLastlocation;
 
     ///
     private ImageButton btnExchange, btnBack;
@@ -34,36 +33,73 @@ public class SearchFragment extends Fragment  {
 
     ///
     private boolean check_exchange = true;
-    public static iMap imap;
+    public static iMap iVehicle;
     public static ArrayList<Point> arr = new ArrayList<>(2);
     private static String titleAction = "";
+    private static String key = "";
 
-    public static SearchFragment newInstance(String title, Point point) {
+    public static SearchFragment newInstance(String title, String key1) {
         SearchFragment searchFragment = new SearchFragment();
         Log.e(TAG, "GO TO NEW INSTANCE");
 
-        if(title.equals("Origin")){
-            edtOrigin.setText(point.getName());
-
-            Log.e(TAG, "EDIT ORIGIN: " + edtOrigin.getText());
-
-        } else if(title.equals("Destination")){
-            edtDest.setText(point.getName());
-            Log.e(TAG, "EDIT DESTINATION: " + edtDest.getText());
-        } else if(title.equals("NONE")) {
-            Log.e(TAG, "NONE");
-
-            edtOrigin.setText("Vị trí của bạn");
-            edtDest.setText("Vị trí đến");
-        }
+//        if(title.equals("Origin")){
+//            if(key1 != null){
+//                //Log.e(TAG, "KEY: " + key1);
+//                //edtOrigin.setText(key);
+//                //Log.e(TAG, "KEY: " + edtOrigin.getText());
+//            } else {
+//                if(point != null){
+//                    //edtOrigin.setText(point.getName());
+//
+//                    //Log.e(TAG, "EDIT ORIGIN: " + edtOrigin.getText());
+//                } else {
+//                    // point == null
+//                    //MapsActivity mapsActivity = MapsActivity.newInstance();
+//
+//
+//                }
+//            }
+//
+//        } else if(title.equals("Destination")){
+//            if(key1 != null){
+//                //edtDest.setText(key);
+//                //Log.e(TAG, "KEY: " + key1);
+//            } else {
+//                 if (point != null) {
+//                     //edtDest.setText(point.getName());
+//                     //Log.e(TAG, "EDIT DESTINATION: " + edtDest.getText());
+//                 } else {
+//                     /// point == null
+//
+//                 }
+//
+//            }
+//        } else if(title.equals("NONE")) {
+//            //Log.e(TAG, "NONE");
+//
+////            edtOrigin.setText("Vị trí của bạn");
+////            edtDest.setText("Vị trí đến");
+//        }
         titleAction = title;
+        key = key1;
         return searchFragment;
     }
 
-    public Bundle saveInstance(String title){
+    public Bundle saveInstance(String title, String key1){
         Log.e(TAG, "size arr: " + arr.size());
         Log.e(TAG, "size arr of main activity: " + MapsActivity.arrayList.size());
         Bundle outState = null;
+
+        if(key1 != null){
+            outState = new Bundle();
+            if(titleAction.equals("Origin")){
+                outState.putString("Current_origin", key1);
+            } else if(titleAction.equals("Destination")){
+                outState.putString("Current_destination", key1);
+            }
+        }
+
+
         if(arr.size() == 1) {
             outState = new Bundle();
             if (title.equals("Origin")) {
@@ -92,9 +128,19 @@ public class SearchFragment extends Fragment  {
     @Override
     public void onActivityCreated( Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        savedInstanceState = saveInstance(titleAction);
+        savedInstanceState = saveInstance(titleAction, key);
         Log.e(TAG, "onActivityCreated");
+
         if(savedInstanceState != null) {
+            String curr_or = savedInstanceState.getString("Current_origin");
+            String curr_des = savedInstanceState.getString("Current_destination");
+            if(curr_or != null){
+                edtOrigin.setText(curr_or);
+            }
+            if (curr_des != null){
+                edtDest.setText(curr_des);
+            }
+
             Point p1 = savedInstanceState.getParcelable("Point_origin");
             Point p2 = savedInstanceState.getParcelable("Point_destination");
             if(p1 != null) {
@@ -113,6 +159,7 @@ public class SearchFragment extends Fragment  {
     public View onCreateView( LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.search_route_layout, container, false);
         Log.e(TAG, "onCreateView");
+
 
         if(savedInstanceState != null) {
             Log.e(TAG, "GO TO OLD FRAGMENT");
@@ -190,25 +237,25 @@ public class SearchFragment extends Fragment  {
         btnBus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imap.selectTraffic(4);
+                iVehicle.selectTraffic(4);
             }
         });
         btnWalk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imap.selectTraffic(1);
+                iVehicle.selectTraffic(1);
             }
         });
         btnBike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imap.selectTraffic(3);
+                iVehicle.selectTraffic(3);
             }
         });
         btnCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imap.selectTraffic(2);
+                iVehicle.selectTraffic(2);
             }
         });
         edtOrigin.setOnClickListener(new View.OnClickListener() {
@@ -236,72 +283,6 @@ public class SearchFragment extends Fragment  {
         });
 
     }
-
-//    @Override
-//    public void onMapReady(GoogleMap googleMap) {
-//        mMapsearch = googleMap;
-//        mMapsearch.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-//        mMapsearch.getUiSettings().setZoomControlsEnabled(false);
-//        mMapsearch.getUiSettings().setMyLocationButtonEnabled(false);
-//
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-//                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//            mMapsearch.setMyLocationEnabled(true);
-//        }
-//        // move camera to curent location
-//        Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
-//        locationResult.addOnCompleteListener(new OnCompleteListener<Location>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Location> task) {
-//                if(task.isSuccessful()){
-//                    Location location = task.getResult();
-//                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-//                    mLastlocation = latLng;
-//                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
-//                    mMapsearch.moveCamera(cameraUpdate);
-//                }
-//            }
-//        });
-
-        // select point
-//        mMapsearch.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-//            @Override
-//            public void onMapLongClick(LatLng latLng) {
-//                if(arr.size() == 2){
-//                    arr.clear();
-//                    mMapsearch.clear();
-//                }
-//                arr.add(latLng);
-//                MarkerOptions markerOptions = new MarkerOptions();
-//                markerOptions.position(latLng);
-//                if(arr.size() == 1){
-//                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-//                    // set text for edtOrigin about point address
-//                    //edtOrigin.setText(arr.get(0).);
-//                } else {
-//                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-//                    // set text for edtOrigin about point address
-//                }
-//                mMapsearch.addMarker(markerOptions);
-//                if(arr.size() == 2){
-//                    String url = GoogleService.getRequestUrl(arr.get(0), arr.get(1), vehicle);
-//                    GoogleService.TaskRequestDirection taskRequestDirection = new GoogleService.TaskRequestDirection();
-//                    taskRequestDirection.execute(url);
-//                }
-//
-//            }
-//        });
-
-//        // select route
-//        mMapsearch.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
-//            @Override
-//            public void onPolylineClick(Polyline polyline) {
-//
-//            }
-//        });
-//
-//
-//    }
 
     public void search(){
         if(arr.size() == 2){

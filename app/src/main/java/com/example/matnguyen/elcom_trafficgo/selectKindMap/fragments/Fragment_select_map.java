@@ -26,7 +26,7 @@ public class Fragment_select_map extends DialogFragment {
     private Button btnDistance;
     private Button btnClock;
 
-    public static iMap imap;
+    public static iMap imapKind;
     private int s;
     private int a;
 
@@ -59,7 +59,7 @@ public class Fragment_select_map extends DialogFragment {
             public void onClick(View v) {
                 s = 1;
                 getDialog().cancel();
-                imap.selectTypeMap(s);
+                imapKind.selectTypeMap(s);
             }
         });
         // density map will be designed by dev with density of traffic
@@ -68,7 +68,7 @@ public class Fragment_select_map extends DialogFragment {
             public void onClick(View v) {
                 s = 2;
                 getDialog().cancel();
-                imap.selectTypeMap(s);
+                imapKind.selectTypeMap(s);
             }
         });
         img_satelite.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +76,7 @@ public class Fragment_select_map extends DialogFragment {
             public void onClick(View v) {
                 s = 3;
                 getDialog().cancel();
-                imap.selectTypeMap(s);
+                imapKind.selectTypeMap(s);
             }
         });
         // traffic map will be designed by dev with signpost
@@ -85,7 +85,7 @@ public class Fragment_select_map extends DialogFragment {
             public void onClick(View v) {
                 s = 4;
                 getDialog().cancel();
-                imap.selectTypeMap(s);
+                imapKind.selectTypeMap(s);
             }
         });
     }
