@@ -43,6 +43,7 @@ import com.example.matnguyen.elcom_trafficgo.searchRoutes.model.Step;
 import com.example.matnguyen.elcom_trafficgo.searchRoutes.parsers.DirectionsParser;
 import com.example.matnguyen.elcom_trafficgo.searchRoutes.services.GoogleService;
 import com.example.matnguyen.elcom_trafficgo.searchRoutes.services.LoadHistoryService;
+import com.example.matnguyen.elcom_trafficgo.selectKindMap.fragments.Fragment_info_polyline;
 import com.example.matnguyen.elcom_trafficgo.selectKindMap.fragments.Fragment_select_map;
 import com.example.matnguyen.elcom_trafficgo.selectKindMap.interfaces.iMap;
 import com.example.matnguyen.elcom_trafficgo.selectpoint.adapter.PlaceAutoCompleteAdapter;
@@ -74,6 +75,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, iMap {
@@ -95,13 +97,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ////init
     private FloatingActionButton imgKindMap;
     private FloatingActionButton fab_my_location, fab_go;
-    private LinearLayout rl_search;
+    private LinearLayout rl_search, linear_vehicle;
     private ImageButton ibtn_voice, ibtn_search;
     private EditText edt_search;
     private LinearLayout content_search;
     private CardView card;
     private RecyclerView rcv_result_search;
     private LinearLayoutManager mLinearLayoutManager;
+    private ImageButton btn_car, btn_transit, btn_walk, btn_bike;
+    private ImageButton btn_info;
+
 
     ////
     private static boolean flag_search = false;
@@ -112,7 +117,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private boolean count_voice = false;
     public static ArrayList<LatLng> arrayList = new ArrayList<>();
     private static List<Polyline> mPolylines;
+    public static ArrayList<String> mSteps;
+    public static ArrayList<String> arrStepBundle;
 
+    private static HashMap<String, ArrayList<String>> mInfoPolyline = new HashMap<>();
     private static String vehicle = "driving";
 
     public static MapsActivity newInstance(){
@@ -141,11 +149,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         buildGoogleApiClient();
         checkPermission();
         initWidget();
+        solve();
 
         handleSearch();
         searchAuto();
         Fragment_select_map.imapKind = this;
-        SearchFragment.iVehicle = this;
+        //SearchFragment.iVehicle = this;
     }
 
 
@@ -171,6 +180,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addApi(Places.GEO_DATA_API)
                 .build();
     }
+
     private void initWidget() {
         mPolylines = new ArrayList<>();
 
@@ -182,14 +192,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fab_go = findViewById(R.id.fab_go);
         fab_my_location = findViewById(R.id.fab_my_location);
 
-       // Nút về vị trí hiện tại
-        fab_my_location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()) ,17.0f));
-            }
-        });
-
         rl_search = findViewById(R.id.rl_search);
         rl_search.setVisibility(View.GONE);
 
@@ -197,6 +199,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ibtn_voice = findViewById(R.id.ibtn_voice);
         ibtn_search = findViewById(R.id.ibtn_seach);
         content_search = findViewById(R.id.content_search);
+
+        imgKindMap = findViewById(R.id.img_kind_map);
+
+        btn_car = findViewById(R.id.img_car);
+        btn_transit = findViewById(R.id.img_transit);
+        btn_bike = findViewById(R.id.img_bike);
+        btn_walk = findViewById(R.id.img_walk);
+        linear_vehicle = findViewById(R.id.linear_vehicle);
+        linear_vehicle.setVisibility(View.GONE);
+
+        btn_info = findViewById(R.id.infoRoute);
+
+    }
+    public void solve(){
+
+        // Nút về vị trí hiện tại
+        fab_my_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()) ,17.0f));
+            }
+        });
 
         edt_search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -263,9 +287,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-
-        imgKindMap = findViewById(R.id.img_kind_map);
-
         imgKindMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -300,6 +321,63 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
+        if(arrayList.size() == 2) {
+            linear_vehicle.setVisibility(View.VISIBLE);
+
+            btn_car.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    vehicle = "driving";
+                    Log.e(TAG, "CAR");
+                    sharpRoute(arrayList.get(0), arrayList.get(1), vehicle);
+
+                }
+            });
+
+            btn_transit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    vehicle = "transit";
+                    Log.e(TAG, "TRANSIT");
+                    sharpRoute(arrayList.get(0), arrayList.get(1), vehicle);
+                }
+            });
+
+            btn_bike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    vehicle = "bike";
+                    Log.e(TAG, "BIKE");
+                    sharpRoute(arrayList.get(0), arrayList.get(1), vehicle);
+                }
+            });
+
+            btn_walk.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    vehicle = "walk";
+                    Log.e(TAG, "WALK");
+                    sharpRoute(arrayList.get(0), arrayList.get(1), vehicle);
+                }
+            });
+            btn_info.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("RestrictedApi")
+                @Override
+                public void onClick(View view) {
+                    fab_go.setVisibility(View.GONE);
+                    fab_my_location.setVisibility(View.GONE);
+                    card.setVisibility(View.GONE);
+                    imgKindMap.setVisibility(View.GONE);
+                    linear_vehicle.setVisibility(View.GONE);
+
+                    Fragment_info_polyline fragment_info = Fragment_info_polyline.newInstance();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.rlt, fragment_info).addToBackStack(null).commit();
+
+                }
+            });
+
+        }
+
 
     }
 
@@ -527,8 +605,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 for(Polyline p : mPolylines){
                     if(p.equals(polyline)){
                         polyline.setColor(Color.BLUE);
-                    } else
+                        String id = p.getId();
+                        // bundle to fragment info polyline
+                        arrStepBundle = new ArrayList<>();
+                         arrStepBundle = mInfoPolyline.get(id);
+                         Log.e(TAG, "SIZE ARRSTEP BUNDLE: " + arrStepBundle.size());
+
+                    } else {
                         p.setColor(Color.LTGRAY);
+                    }
+
                 }
             }
         });
@@ -674,33 +760,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    @Override
-    public void selectTraffic(int a) {
-        switch (a) {
-            case 1:
-                vehicle = "walking";
-                sharpRoute(arrayList.get(0), arrayList.get(1), vehicle);
-                break;
-            case 2:
-                vehicle = "driving";
-                sharpRoute(arrayList.get(0), arrayList.get(1), vehicle);
-                break;
-            case 3:
-                vehicle = "bicycling";
-                sharpRoute(arrayList.get(0), arrayList.get(1), vehicle);
-                break;
-            case 4:
-                vehicle = "transit";
-                sharpRoute(arrayList.get(0), arrayList.get(1), vehicle);
-                break;
-            default:
-                vehicle = "driving";
-                sharpRoute(arrayList.get(0), arrayList.get(1), vehicle);
-                break;
-        }
-    }
+//    @Override
+//    public void selectTraffic(int a) {
+//        switch (a) {
+//            case 1:
+//                vehicle = "walking";
+//                sharpRoute(arrayList.get(0), arrayList.get(1), vehicle);
+//                break;
+//            case 2:
+//                vehicle = "driving";
+//                sharpRoute(arrayList.get(0), arrayList.get(1), vehicle);
+//                break;
+//            case 3:
+//                vehicle = "bicycling";
+//                sharpRoute(arrayList.get(0), arrayList.get(1), vehicle);
+//                break;
+//            case 4:
+//                vehicle = "transit";
+//                sharpRoute(arrayList.get(0), arrayList.get(1), vehicle);
+//                break;
+//            default:
+//                vehicle = "driving";
+//                sharpRoute(arrayList.get(0), arrayList.get(1), vehicle);
+//                break;
+//        }
+//    }
 
     private void sharpRoute (LatLng latLng1, LatLng latLng2, String vehicle){
+        Log.e(TAG, "VEHICLE: " + vehicle);
         for(Polyline polyline : mPolylines) {
             polyline.remove();
         }
@@ -710,8 +797,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         taskRequestDirection.execute(strurl);
     }
 
-    // get direction between 2 point using map api
 
+    // get direction between 2 point using map api
     public static class TaskParser extends AsyncTask<String, Void, List<Route>> {
 
         @Override
@@ -722,7 +809,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 jsonObject = new JSONObject(strings[0]);
                 DirectionsParser directionsParser = new DirectionsParser();
                 routes = directionsParser.parseListRoute(jsonObject);
-                Log.e(TAG, "ROUTE SIZE 1 " + routes.size());
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -734,14 +821,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             ArrayList points = null;
             PolylineOptions polylineOptions = null;
             Log.e(TAG, "ROUTE SIZE " + routes.size());
+            //Route route;
+            String id = "";
             for(int i = 0; i < routes.size(); i++){
+                //routes.get(i).setId(i);
+                mSteps = new ArrayList<>();
                 points = new ArrayList();
                 polylineOptions = new PolylineOptions();
+
                 for(Step step : routes.get(i).getSteps()){
                     double lat = Double.parseDouble(step.getPoint().get("lat"));
                     double lon = Double.parseDouble(step.getPoint().get("lon"));
                     points.add(new LatLng(lat, lon));
+                    String mRoute = step.getIntructions();
+
+                    if(mSteps.size() == 0){
+                        mSteps.add(mRoute);
+                    } else if(mSteps.size() > 0){
+
+                        // compare mRoute with the last element of mSteps
+                        String lastElement = mSteps.get(mSteps.size() - 1);
+                        if(!mRoute.equals(lastElement)){
+                            mSteps.add(mRoute);
+                        }
+                    }
+
                 }
+
                 polylineOptions.addAll(points);
                 polylineOptions.width(18);
                 if (i == 0){
@@ -760,11 +866,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 polylineOptions.geodesic(true);
                 Polyline polyline = mMap.addPolyline(polylineOptions);
+                if(i == 0){
+                    id = polyline.getId();
+                }
+
+                mInfoPolyline.put(polyline.getId(), mSteps);
                 polyline.setClickable(true);
 
                 mPolylines.add(polyline);
+                Log.e(TAG, "SO STEP = " + mSteps.size());
             }
 
+            arrStepBundle = new ArrayList<>();
+            arrStepBundle = mInfoPolyline.get(id);
         }
     }
 

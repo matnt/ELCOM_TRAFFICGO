@@ -14,61 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by NgocTri on 12/11/2017.
- */
-
 public class DirectionsParser {
-    /**
-     * Returns a list of lists containing latitude and longitude from a JSONObject
-     */
-    public List<List<HashMap<String, String>>> parse(JSONObject jObject) {
-
-        List<List<HashMap<String, String>>> routes = new ArrayList<>();
-        JSONArray jRoutes = null;
-        JSONArray jLegs = null;
-        JSONArray jSteps = null;
-
-        try {
-
-            jRoutes = jObject.getJSONArray("routes");
-
-            // Loop for all routes
-            for (int i = 0; i < jRoutes.length(); i++) {
-                jLegs = ((JSONObject) jRoutes.get(i)).getJSONArray("legs");
-                List path = new ArrayList<HashMap<String, String>>();
-
-                //Loop for all legs
-                for (int j = 0; j < jLegs.length(); j++) {
-                    jSteps = ((JSONObject) jLegs.get(j)).getJSONArray("steps");
-
-                    //Loop for all steps
-                    for (int k = 0; k < jSteps.length(); k++) {
-                        String polyline = "";
-                        polyline = (String) ((JSONObject) ((JSONObject) jSteps.get(k)).get("polyline")).get("points");
-                        List list = decodePolyline(polyline);
-                        Log.e("DIRECTION PARSER", list.size() + " ");
-
-                        //Loop for all points
-                        for (int l = 0; l < list.size(); l++) {
-                            HashMap<String, String> hm = new HashMap<>();
-                            hm.put("lat", Double.toString(((LatLng) list.get(l)).latitude));
-                            hm.put("lon", Double.toString(((LatLng) list.get(l)).longitude));
-                            path.add(hm);
-                        }
-                    }
-                    routes.add(path);
-                }
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-
-        }
-
-        return routes;
-    }
 
     public List<Route> parseListRoute(JSONObject jsonObject){
         ArrayList<Route> arrListRoute = new ArrayList<>();
@@ -76,31 +22,34 @@ public class DirectionsParser {
         JSONArray jSteps = null;
         JSONArray jLegs = null;
         try {
-
             jRoutes = jsonObject.getJSONArray("routes");
 
             // Loop for all routes
             for (int i = 0; i < jRoutes.length(); i++) {
                 jLegs = ((JSONObject) jRoutes.get(i)).getJSONArray("legs");
 
-
                 //Loop for all legs
                 for (int j = 0; j < jLegs.length(); j++) {
                     jSteps = ((JSONObject) jLegs.get(j)).getJSONArray("steps");
                     List<Step> steps = new ArrayList<>();
+                    Log.e("DIRECTION PARSER", "STEP LENGTH: " + jSteps.length());
+
                     //Loop for all steps
                     for (int k = 0; k < jSteps.length(); k++) {
+                        String info = (String) ( ((JSONObject) jSteps.get(k)).get("html_instructions"));
+                        // step1.add(new Step(info));
                         String polyline = "";
                         polyline = (String) ((JSONObject) ((JSONObject) jSteps.get(k)).get("polyline")).get("points");
                         List list = decodePolyline(polyline);
-                        Log.e("DIRECTION PARSER", list.size() + " ");
 
                         //Loop for all points
                         for (int l = 0; l < list.size(); l++) {
+                            // lat lng of 1 point
                             HashMap<String, String> hm = new HashMap<>();
                             hm.put("lat", Double.toString(((LatLng) list.get(l)).latitude));
                             hm.put("lon", Double.toString(((LatLng) list.get(l)).longitude));
-                            steps.add(new Step(hm, null, null, null, null));
+                            //hm.put("")
+                            steps.add(new Step(hm, null, null, info, null));
                         }
                     }
                     Route route = new Route(null, null, null, null, steps);
@@ -111,7 +60,7 @@ public class DirectionsParser {
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         return arrListRoute;
@@ -156,5 +105,83 @@ public class DirectionsParser {
         return poly;
     }
 
+
+//    public List<List<HashMap<String, String>>> parse(JSONObject jObject) {
+//
+//        List<List<HashMap<String, String>>> routes = new ArrayList<>();
+//        JSONArray jRoutes = null;
+//        JSONArray jLegs = null;
+//        JSONArray jSteps = null;
+//
+//        try {
+//
+//            jRoutes = jObject.getJSONArray("routes");
+//
+//            // Loop for all routes
+//            for (int i = 0; i < jRoutes.length(); i++) {
+//                jLegs = ((JSONObject) jRoutes.get(i)).getJSONArray("legs");
+//                List path = new ArrayList<HashMap<String, String>>();
+//
+//                //Loop for all legs
+//                for (int j = 0; j < jLegs.length(); j++) {
+//                    jSteps = ((JSONObject) jLegs.get(j)).getJSONArray("steps");
+//
+//                    //Loop for all steps
+//                    for (int k = 0; k < jSteps.length(); k++) {
+//                        String polyline = "";
+//                        polyline = (String) ((JSONObject) ((JSONObject) jSteps.get(k)).get("polyline")).get("points");
+//                        List list = decodePolyline(polyline);
+//                        Log.e("DIRECTION PARSER", list.size() + " ");
+//
+//                        //Loop for all points
+//                        for (int l = 0; l < list.size(); l++) {
+//                            HashMap<String, String> hm = new HashMap<>();
+//                            hm.put("lat", Double.toString(((LatLng) list.get(l)).latitude));
+//                            hm.put("lon", Double.toString(((LatLng) list.get(l)).longitude));
+//                            path.add(hm);
+//                        }
+//                    }
+//                    routes.add(path);
+//                }
+//            }
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        } catch (Exception e) {
+//
+//        }
+//
+//        return routes;
+//    }
+
+
+//    public HashMap<String, List<String>> parseStep(JSONObject jsonObject){
+//        HashMap<String, List<String>> hashMap = new HashMap<>();
+//        ArrayList<String> arr;
+//        JSONArray jRoutes = null;
+//        JSONArray jSteps = null;
+//        JSONArray jLegs = null;
+//        try {
+//            jRoutes = jsonObject.getJSONArray("routes");
+//            for(int i = 0; i < jRoutes.length(); i++){
+//                arr = new ArrayList<>();
+//                jLegs = ( (JSONObject) jRoutes.get(i)).getJSONArray("legs");
+//                for(int j = 0; j < jLegs.length(); j++){
+//                    jSteps = ((JSONObject) jLegs.get(j)).getJSONArray("steps");
+//                    for(int k = 0; k < jSteps.length(); k++){
+//                        String info = (String) ((JSONObject) jSteps.get(k)).get("html_instructions");
+//                        arr.add(info);
+//
+//                    }
+//                }
+//                //hashMap.put( , arr);
+//            }
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return hashMap;
+//    }
 
 }

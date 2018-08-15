@@ -27,7 +27,7 @@ public class GoogleService {
         HttpURLConnection httpURLConnection = null;
         try {
             URL url = new URL(urlReq);
-            Log.e(TAG, "URL REQUEST: " + urlReq);
+            //Log.e(TAG, "URL REQUEST: " + urlReq);
             httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.connect();
 
@@ -77,7 +77,7 @@ public class GoogleService {
         protected String doInBackground(String... strings) {
             String responeString = "";
             try {
-                Log.e(TAG, "String 0: " + strings[0]);
+                //Log.e(TAG, "String 0: " + strings[0]);
                 responeString = requestDirection(strings[0]);
             } catch (IOException e) {
                 e.printStackTrace();

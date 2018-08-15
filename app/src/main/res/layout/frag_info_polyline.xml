@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="#ffff"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary"
+        android:id="@+id/tab"
+        android:layout_height="50dp">
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_back"
+
+           android:background="@color/colorPrimary"
+            android:id="@+id/btn_backInfo"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_width="0dp"
+            android:text="Information route"
+            android:textColor="#ffff"
+            android:textSize="20dp"
+            android:gravity="center_vertical"
+            android:layout_weight="6"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:id="@+id/info_polyline"
+        android:layout_height="match_parent"></ListView>
+
+</LinearLayout>

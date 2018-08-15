@@ -19,6 +19,9 @@ public class Step {
         Intructions = intructions;
         Vehicle = vehicle;
     }
+    public Step(String intro){
+        this.Intructions = intro;
+    }
 
     public String getVehicle() {
         return Vehicle;

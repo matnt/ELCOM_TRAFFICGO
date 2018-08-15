@@ -29,12 +29,12 @@ public class SearchFragment extends Fragment  {
     private ImageButton btnExchange, btnBack;
     public static TextView edtOrigin, edtDest;
     private ImageView btnMyLocation, btnLocation;
-    private ImageButton btnCar, btnBike, btnBus, btnWalk;
+    //private ImageButton btnCar, btnBike, btnBus, btnWalk;
 
     ///
     private boolean check_exchange = true;
-    public static iMap iVehicle;
-    public static ArrayList<Point> arr = new ArrayList<>(2);
+    //public static iMap iVehicle;
+    public static ArrayList<Point> arr = new ArrayList<>();
     private static String titleAction = "";
     private static String key = "";
 
@@ -186,10 +186,10 @@ public class SearchFragment extends Fragment  {
         btnMyLocation = view.findViewById(R.id.btnMyLocation);
         btnLocation = view.findViewById(R.id.btnLocation);
 
-        btnCar = view.findViewById(R.id.ibt_car);
-        btnBike = view.findViewById(R.id.ibt_bike);
-        btnWalk = view.findViewById(R.id.ibt_walk);
-        btnBus = view.findViewById(R.id.ibt_bus);
+//        btnCar = view.findViewById(R.id.ibt_car);
+//        btnBike = view.findViewById(R.id.ibt_bike);
+//        btnWalk = view.findViewById(R.id.ibt_walk);
+//        btnBus = view.findViewById(R.id.ibt_bus);
 
     }
 
@@ -234,30 +234,30 @@ public class SearchFragment extends Fragment  {
                 }
             }
         });
-        btnBus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                iVehicle.selectTraffic(4);
-            }
-        });
-        btnWalk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                iVehicle.selectTraffic(1);
-            }
-        });
-        btnBike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                iVehicle.selectTraffic(3);
-            }
-        });
-        btnCar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                iVehicle.selectTraffic(2);
-            }
-        });
+//        btnBus.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                iVehicle.selectTraffic(4);
+//            }
+//        });
+//        btnWalk.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                iVehicle.selectTraffic(1);
+//            }
+//        });
+//        btnBike.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                iVehicle.selectTraffic(3);
+//            }
+//        });
+//        btnCar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                iVehicle.selectTraffic(2);
+//            }
+//        });
         edtOrigin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
