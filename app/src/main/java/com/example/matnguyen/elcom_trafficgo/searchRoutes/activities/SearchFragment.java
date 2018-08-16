@@ -172,6 +172,20 @@ public class SearchFragment extends Fragment  {
         initWidget(view);
         solve();
         search();
+//        if(arr.size() == 2){
+//            Log.e(TAG, "arr size: " + arr.size());
+//            edtOrigin.setText(arr.get(0).getName());
+//            edtDest.setText(arr.get(1).getName());
+//        } else if (arr.size() == 1){
+//            Log.e(TAG, "arr size: " + arr.size());
+//            if(arr.get(0) != null){
+//                Log.e(TAG, "element 0");
+//                edtOrigin.setText(arr.get(0).getName());
+//            } else {
+//                Log.e(TAG, "element 1");
+//                edtDest.setText(arr.get(1).getName());
+//            }
+//        }
 
         return view;
     }

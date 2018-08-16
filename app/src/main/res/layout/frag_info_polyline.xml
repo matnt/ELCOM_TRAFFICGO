@@ -23,6 +23,7 @@
             android:text="Information route"
             android:textColor="#ffff"
             android:textSize="20dp"
+            android:id="@+id/text_info"
             android:gravity="center_vertical"
             android:layout_weight="6"
             android:layout_height="match_parent" />

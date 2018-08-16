@@ -121,11 +121,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static ArrayList<String> arrStepBundle;
 
     private static HashMap<String, ArrayList<String>> mInfoPolyline = new HashMap<>();
-    private static String vehicle = "driving";
+    public static String vehicle = "driving";
 
     public static MapsActivity newInstance(){
         MapsActivity mapsActivity = new MapsActivity();
-
 
         return mapsActivity;
     }

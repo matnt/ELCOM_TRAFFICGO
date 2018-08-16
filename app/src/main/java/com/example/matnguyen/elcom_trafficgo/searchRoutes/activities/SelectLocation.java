@@ -222,9 +222,6 @@ public class SelectLocation extends Fragment  {
                     Intent intent  = new Intent(getActivity(), MapsActivity.class);
                     startActivity(intent);
 
-//                    SearchFragment search = SearchFragment.newInstance(receive, null, null);
-//                    getChildFragmentManager().beginTransaction().replace(R.id.select, search).addToBackStack(null).commit();
-
 
 
 
@@ -298,15 +295,13 @@ public class SelectLocation extends Fragment  {
                         Point p = new Point();
                         p.setId(String.valueOf(item.placeId));
                         p.setName(String.valueOf(item.placeName));
-                        p.setLat(item.latitude);
-                        p.setLng(item.longitude);
 
                         // add new point into database
                         DatabasehistoryHelper.getInstance(getActivity()).addNewPoint(p);
                         LoadHistoryService.launchLoadHistoryService(getActivity());
                         final Point point = new Point();
                         //Log.e(TAG, "PLACE ID: " + placeId + " ID: " + id);
-                        //point.setId(placeId);
+
 
                         // update point in database
                         PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(MapsActivity.mGoogleApiClient, placeId);
@@ -320,6 +315,7 @@ public class SelectLocation extends Fragment  {
                                     point.setName(item.placeName + "");
                                     point.setLat(latLng.latitude);
                                     point.setLng(latLng.longitude);
+
                                     final int rowsUpdated = DatabasehistoryHelper.getInstance(getActivity()).updateHistory(point);
                                     Log.e(TAG, "ROW UPDATED: " + rowsUpdated);
                                     if (rowsUpdated == 1) {
@@ -330,56 +326,26 @@ public class SelectLocation extends Fragment  {
                                         Log.e(TAG, "Update fail!");
                                     }
 
-//                                    MarkerOptions markerOptions = new MarkerOptions();
-//                                    markerOptions.position(latLng);
-//                                    markerOptions.title(places.get(0).getName().toString());
-//                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                                    Log.e(TAG, "POINT NAME, LAT, LNG: " + point.getName() + ", " + point.getLat() + ", " + point.getLng());
 
-//                                    mCurrLocationMarker = mMap.addMarker(markerOptions);
-//
-//                                    //move map camera
-//                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-//
-//                                    if (flag_search) {
-//                                        flag_search = !flag_search;
-//                                        ibtn_search.setImageResource(R.mipmap.ic_search);
-//                                        rl_search.setVisibility(View.GONE);
-//
-//                                        Fragment fragment = fragmentManager.findFragmentById(R.id.content_search);
-//                                        android.support.v4.app.FragmentTransaction ft_add = fragmentManager.beginTransaction();
-//                                        ft_add.remove(fragment);
-//                                        ft_add.commit();
-//
-//                                        //Ẩn bàn phím
-//                                        edt_search.setFocusableInTouchMode(false);
-//                                        edt_search.setFocusable(false);
-//                                        edt_search.requestFocus();
-//
-//                                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//                                        imm.hideSoftInputFromWindow(edt_search.getWindowToken(), 0);
-//
-//                                        edt_search.setText("");
-//                                        mAutoCompleteAdapter.ClearData();
-//                                    }
+                                    if (receive.equals("Origin")) {
+                                        SearchFragment.arr.add(0, point);
+
+                                    } else if (receive.equals("Destination")) {
+                                        SearchFragment.arr.add(1, point);
+
+                                    }
+
+                                    // hide key board
+                                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                    imm.hideSoftInputFromWindow(edtLocation.getWindowToken(), 0);
+
+                                    SearchFragment searchFragment = SearchFragment.newInstance(receive, null);
+                                    getChildFragmentManager().beginTransaction().replace(R.id.select, searchFragment).addToBackStack(null).commit();
                                 }
 
                             }
                         });
-
-                        //bundle to searchActivity and MapsFragment
-                        if(receive.equals("Origin")){
-                            SearchFragment.arr.add(0, p);
-                        } else {
-                            SearchFragment.arr.add(1, p);
-                        }
-
-                        // go to SearchFragment
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelable("Point", p);
-                        SearchFragment search = new SearchFragment();
-                        search.setArguments(bundle);
-
-                        getChildFragmentManager().beginTransaction().replace(R.id.select, new SearchFragment()).commit();
 
                     }
                 })
